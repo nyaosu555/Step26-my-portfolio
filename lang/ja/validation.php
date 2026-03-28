@@ -262,6 +262,8 @@ return [
         'updated_at' => '更新日',
         'username' => 'ユーザー名',
         'year' => '年',
+        'menu_name' => 'メニュー名',
+        'type_id' => 'ジャンル',
     ],
 
 ];
