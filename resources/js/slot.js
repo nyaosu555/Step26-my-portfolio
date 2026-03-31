@@ -205,7 +205,12 @@ if(saveBtn) {
             }
         } catch (error) {
             console.error('保存エラー', error);
-            alert('保存に失敗しました。ログイン状態を確認してください。');
+
+            if(error.response && error.response.status === 442) {
+                alert(error.response.data.message);
+            } else {
+                alert('保存に失敗しました。ログイン状態を確認してください。');
+            }
         }
     });
 }

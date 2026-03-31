@@ -33,7 +33,16 @@ class MealRecordController extends Controller
         //     'received_data' => $request->all()
         // ], 200);
 
-        // 1. バリデーション
+        // 1. 同日に2件は献立を保存できないようにする
+        $today = now()->format('Y-m-d');
+        $exists = MealRecord::where('user_id', Auth::id())->where('date', $today)->exists();
+        if($exists) {
+            return response()->json([
+                'message' => '本日の献立はすでに保存済みです。'
+            ], 442);
+        }
+
+        // 2. バリデーション
         $validated = $request->validate([
         // exists:テーブル名,カラム名 という書き方にします
             'main_dish_id'  => 'required|exists:menus,id',
@@ -42,7 +51,7 @@ class MealRecordController extends Controller
         ]);
 
         try {
-            // 2. トランザクション（親子の保存をセットで行う）
+            // 3. トランザクション（親子の保存をセットで行う）
             return DB::transaction(function () use ($validated) {
                 // 3. 親（meal_records）の作成
                 $record = MealRecord::create([
