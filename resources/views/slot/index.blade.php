@@ -96,7 +96,7 @@
             {{-- ナビゲーション --}}
             <div class="mt-10 flex justify-end space-x-6 text-[#d97706] font-bold text-sm md:text-base">
                 <a href="#" id="save-button" class="flex items-center hover:opacity-70"><span class="mr-1">⬇️</span>献立を保存する</a>
-                <a href="#" class="flex items-center hover:opacity-70"><span class="mr-1">🕐</span>保存した献立一覧</a>
+                <a href="/meal-records" class="flex items-center hover:opacity-70"><span class="mr-1">🕐</span>保存した献立一覧</a>
                 <a href="{{ route('menus.index') }}" class="flex items-center hover:opacity-70"><span class="mr-1">⬆️</span>メニュー管理</a>
             </div>
         </div>

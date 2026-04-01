@@ -95,4 +95,22 @@ class MealRecordController extends Controller
 
 
     }
+
+    // 保存した献立削除処理
+    public function selectDestroy(Request $request) {
+            $ids = $request->input('ids');
+
+            if(!$ids) {
+                return response()->json([
+                    'message' => 'IDがありません。'
+                ], 400);
+            }
+
+            MealRecord::where('user_id', Auth::id())->whereIn('id', $ids)->delete();
+
+            return response()->json([
+                'message' => '削除成功'
+            ], 200);
+
+    }
 }

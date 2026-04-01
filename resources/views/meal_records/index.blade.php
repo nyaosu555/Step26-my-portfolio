@@ -3,6 +3,9 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             献立の履歴
         </h2>
+        <button id="select-delete-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow text-sm transition">
+            選択した項目を削除
+        </button>
     </x-slot>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -26,7 +29,7 @@
                         @endphp
                         <tr>
                             <td class="px-6 py-4 text-center">
-                                <input type="checkbox" name="record_ids[]" value="{{$record->id}}" class="rounded border-gray-300 text-yellow-600 focus:ring-yellow-500">
+                                <input type="checkbox" name="record_ids[]" value="{{$record->id}}" class="record-checkbox rounded border-gray-300 text-yellow-600 focus:ring-yellow-500">
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                 {{str_replace('-', '/', $record->date)}}
@@ -46,4 +49,8 @@
             </table>
         </div>
     </div>
+
+    @push('scripts')
+        @vite(['resources/js/meal-record.js'])
+    @endpush
 </x-app-layout>

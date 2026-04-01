@@ -41,6 +41,9 @@ Route::middleware('auth')->group(function () {
 
     // 献立の保存登録
     Route::post('/meal-records', [MealRecordController::class, 'store'])->middleware('auth');
+
+    // 保存した献立の削除
+    Route::post('/meal-records/select-delete', [MealRecordController::class, 'selectDestroy'])->middleware('auth');
 });
 
 require __DIR__.'/auth.php';
