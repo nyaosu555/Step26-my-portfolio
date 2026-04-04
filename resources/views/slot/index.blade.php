@@ -10,6 +10,19 @@
             今日のおかずなんにしよ
             <div class="h-1.5 w-[245px] bg-[#D97706] mx-auto mt-2 rounded-full"></div>
         </h1>
+        {{-- メニュー登録件数が足りない時のメッセージ --}}
+        @if (!$isReady)
+            <div class="absolute top-[40%] z-20 w-full max-w-4xl mb-6 bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 rounded shadow-md" role="alert">
+                <p class="font-bold text-lg">⚠️スロットを回すための登録メニュー件数が足りません。</p>
+                <p>各料理タイプを3つ以上登録してください。</p>
+                <div class="flex gap-4 mt-2 text-sm font-semibold">
+                    <span>メイン：{{ $counts['main'] }}/3</span>
+                    <span>副菜A：{{ $counts['side_a'] }}/3</span>
+                    <span>副菜B：{{ $counts['side_b'] }}/3</span>
+                </div>
+                <a href="{{ route('menus.index') }}">👉メニュー管理画面で登録する</a>
+            </div>
+        @endif
         {{-- メインの黄色いカード --}}
         <div class="relative z-10 w-full max-w-4xl bg-[#FEE5A5] rounded-[2rem] shadow-2xl p-8 md:p-12 text-center">
             {{-- スロットコンテナ --}}
@@ -31,12 +44,17 @@
                             >
                             </div>
                         </div>
+                        {{-- $isReadyがfalseならスタートボタン無効化 --}}
                         <button
+                        @if ($isReady)
                             @click="rolling = !rolling; toggleSlot(1, rolling)"
-                            :class="rolling ? 'bg-red-500 hover:bg-red-600' : 'bg-[#FBBF24] hover:bg-[#F59E0B]'"
+                        @endif
+                            {{-- :class="rolling ? 'bg-red-500 hover:bg-red-600' : 'bg-[#FBBF24] hover:bg-[#F59E0B]'" --}}
+                            :class="!{{ $isReady ? 'true' : 'false' }} ? 'bg-red-400 cursor-not-allowed opacity-50' : (rolling ? 'bg-red-500 hover:bg-red-600' : 'bg-[#FBBF24] hover:bg-[#F59E0B]')"
                             class="w-full py-3 bg-[#fbbf24] hover:bg-[#f59e0b] text-white font-bold rounded-xl shadow-md transition-all active:scale-95"
                         >
-                            <span x-text="rolling ? 'ストップ' : 'スタート'"></span>
+                            {{-- <span x-text="rolling ? 'ストップ' : 'スタート'"></span> --}}
+                            <span x-text="!{{ $isReady ? 'true' : 'false' }} ? '準備中' : (rolling ? 'ストップ' : 'スタート')"></span>
                         </button>
                     </div>
                 </div>
@@ -57,12 +75,24 @@
                             >
                             </div>
                         </div>
-                        <button
+                        {{-- <button
                             @click="rolling = !rolling; toggleSlot(2, rolling)"
                             :class="rolling ? 'bg-red-500 hover:bg-red-600' : 'bg-[#FBBF24] hover:bg-[#F59E0B]'"
                             class="w-full py-3 bg-[#fbbf24] hover:bg-[#f59e0b] text-white font-bold rounded-xl shadow-md transition-all active:scale-95"
                         >
                             <span x-text="rolling ? 'ストップ' : 'スタート'"></span>
+                        </button> --}}
+                        {{-- $isReadyがfalseならスタートボタン無効化 --}}
+                        <button
+                        @if ($isReady)
+                            @click="rolling = !rolling; toggleSlot(2, rolling)"
+                        @endif
+                            {{-- :class="rolling ? 'bg-red-500 hover:bg-red-600' : 'bg-[#FBBF24] hover:bg-[#F59E0B]'" --}}
+                            :class="!{{ $isReady ? 'true' : 'false' }} ? 'bg-red-400 cursor-not-allowed opacity-50' : (rolling ? 'bg-red-500 hover:bg-red-600' : 'bg-[#FBBF24] hover:bg-[#F59E0B]')"
+                            class="w-full py-3 bg-[#fbbf24] hover:bg-[#f59e0b] text-white font-bold rounded-xl shadow-md transition-all active:scale-95"
+                        >
+                            {{-- <span x-text="rolling ? 'ストップ' : 'スタート'"></span> --}}
+                            <span x-text="!{{ $isReady ? 'true' : 'false' }} ? '準備中' : (rolling ? 'ストップ' : 'スタート')"></span>
                         </button>
                     </div>
                 </div>
@@ -83,12 +113,24 @@
                             >
                             </div>
                         </div>
-                        <button
+                        {{-- <button
                             @click="rolling = !rolling; toggleSlot(3, rolling)"
                             :class="rolling ? 'bg-red-500 hover:bg-red-600' : 'bg-[#FBBF24] hover:bg-[#F59E0B]'"
                             class="w-full py-3 bg-[#fbbf24] hover:bg-[#f59e0b] text-white font-bold rounded-xl shadow-md transition-all active:scale-95"
                         >
                             <span x-text="rolling ? 'ストップ' : 'スタート'"></span>
+                        </button> --}}
+                        {{-- $isReadyがfalseならスタートボタン無効化 --}}
+                        <button
+                        @if ($isReady)
+                            @click="rolling = !rolling; toggleSlot(3, rolling)"
+                        @endif
+                            {{-- :class="rolling ? 'bg-red-500 hover:bg-red-600' : 'bg-[#FBBF24] hover:bg-[#F59E0B]'" --}}
+                            :class="!{{ $isReady ? 'true' : 'false' }} ? 'bg-red-400 cursor-not-allowed opacity-50' : (rolling ? 'bg-red-500 hover:bg-red-600' : 'bg-[#FBBF24] hover:bg-[#F59E0B]')"
+                            class="w-full py-3 bg-[#fbbf24] hover:bg-[#f59e0b] text-white font-bold rounded-xl shadow-md transition-all active:scale-95"
+                        >
+                            {{-- <span x-text="rolling ? 'ストップ' : 'スタート'"></span> --}}
+                            <span x-text="!{{ $isReady ? 'true' : 'false' }} ? '準備中' : (rolling ? 'ストップ' : 'スタート')"></span>
                         </button>
                     </div>
                 </div>
@@ -97,7 +139,11 @@
             <div class="mt-10 flex justify-end space-x-6 text-[#d97706] font-bold text-sm md:text-base">
                 <a href="#" id="save-button" class="flex items-center hover:opacity-70"><span class="mr-1">⬇️</span>献立を保存する</a>
                 <a href="/meal-records" class="flex items-center hover:opacity-70"><span class="mr-1">🕐</span>保存した献立一覧</a>
-                <a href="{{ route('menus.index') }}" class="flex items-center hover:opacity-70"><span class="mr-1">⬆️</span>メニュー管理</a>
+                @can('admin')
+                    <a href="{{ route('menus.index') }}" class="flex items-center hover:opacity-70"><span class="mr-1">⬆️</span>メニュー管理</a>
+                @else
+                    <button disabled class="flex items-center opacity-30 cursor-not-allowed" title="管理者権限が必要です"><span class="mr-1">⬆️</span>メニュー管理（制限中）</a>
+                @endcan
             </div>
         </div>
     </div>

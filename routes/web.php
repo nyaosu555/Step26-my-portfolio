@@ -23,16 +23,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/meal-records', [MealRecordController::class, 'index'])->name('meal_records.index');
 
     // メニュー一覧表示
-    Route::get('/menus', [MenuController::class, 'index'])->name('menus.index');
+    Route::get('/menus', [MenuController::class, 'index'])->middleware('can:admin')->name('menus.index');
 
     // メニュー登録画面表示
     // Route::get('/menus/create', [MenuController::class, 'create'])->name('menus.create');
 
     // メニューデータ登録
-    Route::post('/menus', [MenuController::class, 'store'])->name('menus.store');
+    Route::post('/menus', [MenuController::class, 'store'])->middleware('can:admin')->name('menus.store');
 
     // メニューの削除
-    Route::delete('/menus/{menu}', [MenuController::class, 'destroy'])->name('menus.destroy');
+    Route::delete('/menus/{menu}', [MenuController::class, 'destroy'])->middleware('can:admin')->name('menus.destroy');
 
     // スロット画面の表示
     Route::get('/', [SlotController::class, 'index'])

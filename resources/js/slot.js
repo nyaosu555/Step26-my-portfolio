@@ -107,10 +107,17 @@ function setupSlot(elementId, category) {
     ul.innerHTML = '';
 
     // ★ ループ用に、最後の商品を先頭にも入れる
-    const displayItems = [items[items.length - 1], ...items, items[0]];
+    // const displayItems = [items[items.length - 1], ...items, items[0]];
+    // const displayItems = items;
+    const displayItems = (items.length >= 3)
+    ? [items[items.length - 1], ...items, items[0]]
+    : items;
 
     displayItems.forEach((item) => {
         const li = document.createElement('li');
+        li.dataset.typeId = item.type_id; // data-type-id になる
+        li.dataset.name = item.name;      // data-name になる
+        li.textContent = `${item.name} (ID:${item.type_id})`; // 画面上にも出しちゃう
         // 画像パスの組み立て
             const rawPath = item.image_path;
             let imgPath = 'images/no_image.png';
