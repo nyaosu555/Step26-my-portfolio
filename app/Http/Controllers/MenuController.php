@@ -52,12 +52,12 @@ class MenuController extends Controller
     }
 
     public function index() {
-        // ログインユーザーのメニューのみを取得
+        // 1. ログインユーザーのメニューのみを取得
         $menus = Menu::where('user_id', auth()->id())
                     ->orderBy('created_at', 'desc')
                     ->get();
 
-        // 登録フォーム用セレクトボックス用データ
+        // 2. 登録フォーム用セレクトボックス用データ
         $types = Type::all();
 
         return view('menus.index', compact('menus', 'types'));
