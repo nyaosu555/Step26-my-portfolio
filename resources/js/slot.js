@@ -18,6 +18,10 @@ let selectedResults = {
 
 const saveBtn = document.getElementById('save-button');
 
+const resultMain = document.getElementById('result-main');
+const resultSubA = document.getElementById('result-sub-a');
+const resultSubB = document.getElementById('result-sub-b');
+
 window.toggleSlot = function(type, isRolling) {
     const idMap = {
         1: 'slot-main',
@@ -34,6 +38,10 @@ window.toggleSlot = function(type, isRolling) {
     if (isRolling) {
         selectedResults[type] = null;
         updateSaveButtonState();
+
+        // 【追加】回転開始時に、該当するスロットの表示をクリアする
+        const resEl = type === 1 ? resultMain : (type === 2 ? resultSubA : resultSubB);
+        if (resEl) resEl.textContent = '...';
 
         const items = allMenus.filter(m => m.type_id === type);
         const h = 75;
@@ -70,13 +78,31 @@ window.toggleSlot = function(type, isRolling) {
             // 確認用ログ
             console.log(`当選ID: ${wonMenu.id}, 当選名: ${wonMenu.name}`);
 
-
             gsap.to(liElements, {
                 y: (i) => (-(i - 1 - randomIndex) * 75 + offset) + "%",
                 duration: 1.5,
                 ease: "back.out(1.2)",
                 onComplete: () => {
                     isSelectionComplete();
+                    // 1. 各スロットの下（pタグ）の更新
+        const resEl = type === 1 ? resultMain : (type === 2 ? resultSubA : resultSubB);
+        if (resEl) resEl.textContent = wonMenu.name;
+
+        // 2. 中央結果エリアの更新
+        const displayIdMap = { 1: 'display-main', 2: 'display-sub-a', 3: 'display-sub-b' };
+        const displaySpan = document.getElementById(displayIdMap[type]);
+        if (displaySpan) {
+            displaySpan.textContent = wonMenu.name;
+        }
+
+        // 3. 【修正点】hiddenを削除して表示させる
+        const resultArea = document.getElementById('slot-result-display');
+        if (resultArea) {
+            resultArea.classList.remove('hidden');
+
+            // もし「パッ」と出るのが急すぎると感じたら、ここだけGSAPでふわっとさせてもOK
+            gsap.fromTo(resultArea, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+        }
                 }
             });
         }
@@ -201,24 +227,86 @@ if(saveBtn) {
             sub_dish_b_id: selectedResults[3].id,
         };
 
-        try {
-            // 4. LaravelのルートへPOST送信
-            const response = await axios.post('/meal-records', postData);
+        // 自作の確認モーダルを呼び出す
+            window.dispatchEvent(new CustomEvent('confirm-delete', {
+                detail: {
+                    message: '本日の献立を保存してもよろしいでしょうか？',
+                    btnText: '保存する',
+                    action: async() => {
+                        try {
+                            // 4. LaravelのルートへPOST送信
+                            const response = await axios.post('/meal-records', postData);
 
-            if(response.status === 200) {
-                alert('今日の献立を保存しました。');
-                saveBtn.style.pointerEvents = 'none';
-                saveBtn.style.opacity = '0.3';
-            }
-        } catch (error) {
-            console.error('保存エラー', error);
+                            // if(response.status === 200) {
+                            //     alert('今日の献立を保存しました。');
+                            //     saveBtn.style.pointerEvents = 'none';
+                            //     saveBtn.style.opacity = '0.3';
+                            // }
+                            if(response.status === 200) {
+                                saveBtn.style.pointerEvents = 'none';
+                                saveBtn.style.opacity = '0.3';
 
-            if(error.response && error.response.status === 442) {
-                alert(error.response.data.message);
-            } else {
-                alert('保存に失敗しました。ログイン状態を確認してください。');
-            }
-        }
+                                // 2. 自作フラッシュメッセージを「手動」で表示させる
+                                const messageBox = document.getElementById('flash-message');
+                                if (messageBox) {
+                                    // メッセージ内容と色（クラス）を直接書き換える
+                                    messageBox.textContent = '今日の献立を保存しました！';
+                                    console.log(messageBox);
+
+                                    // もし以前の danger クラスが残っていたら success 用に差し替える
+                                    messageBox.classList.remove('bg-red-100', 'border-red-700', 'text-red-800');
+                                    messageBox.classList.add('bg-green-100', 'border-green-700', 'text-green-800');
+
+                                    // アニメーション開始
+                                    requestAnimationFrame(() => {
+                                        messageBox.classList.remove('-translate-y-full', 'opacity-0');
+                                        messageBox.classList.add('translate-y-0', 'opacity-100');
+                                    });
+
+                                    // 5秒後に自動で消す
+                                    setTimeout(() => {
+                                        messageBox.classList.remove('opacity-100', 'translate-y-0');
+                                        messageBox.classList.add('opacity-0', '-translate-y-full');
+                                    }, 7000);
+                                }
+                            }
+                        } catch (error) {
+                            console.error('保存エラー', error);
+
+                            if(error.response && error.response.status === 442) {
+                                // alert(error.response.data.message);
+                                window.dispatchEvent(new CustomEvent('alert-message', {
+                                    detail: {message: error.response.data.message}
+                                }));
+                            } else {
+                                // alert('保存に失敗しました。ログイン状態を確認してください。');
+                                window.dispatchEvent(new CustomEvent('alert-message', {
+                                    detail: {message: '保存に失敗しました。ログイン状態を確認してください。'}
+                                }));
+                            }
+                        }
+                    }
+                }
+            }));
+
+        // try {
+        //     // 4. LaravelのルートへPOST送信
+        //     const response = await axios.post('/meal-records', postData);
+
+        //     if(response.status === 200) {
+        //         alert('今日の献立を保存しました。');
+        //         saveBtn.style.pointerEvents = 'none';
+        //         saveBtn.style.opacity = '0.3';
+        //     }
+        // } catch (error) {
+        //     console.error('保存エラー', error);
+
+        //     if(error.response && error.response.status === 442) {
+        //         alert(error.response.data.message);
+        //     } else {
+        //         alert('保存に失敗しました。ログイン状態を確認してください。');
+        //     }
+        // }
     });
 }
 

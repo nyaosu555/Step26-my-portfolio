@@ -108,6 +108,13 @@ class MealRecordController extends Controller
 
             MealRecord::where('user_id', Auth::id())->whereIn('id', $ids)->delete();
 
+            // return redirect()->route('meal_records.index')->with([
+            //     'message' => count($request->ids) . '件の献立を削除しました。',
+            //     'type' => 'danger',
+            // ]);
+            session()->flash('message', count($ids) . '件の献立を削除しました。');
+            session()->flash('type', 'danger');
+
             return response()->json([
                 'message' => '削除成功'
             ], 200);

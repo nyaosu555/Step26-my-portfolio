@@ -29,10 +29,27 @@
                 </header>
             @endisset
 
+            {{-- 全体の背景 --}}
+        <div class="relative min-h-screen bg-cover bg-center flex items-center justify-start flex-col p-4"
+                style="background-image: url('{{ asset('images/background-image.png') }}');"
+        >
+            {{-- 背景を暗くするオーバーレイ --}}
+            <div class="absolute inset-0 bg-black/50 backrdop-blur-sm"></div>
+
+            {{-- 共通タイトル --}}
+            <div class="relative z-10 text-center my-20 md:mb-16">
+                <h1 class="text-[#ffffff] text-3xl md:text-5xl font-bold mb-8 drop-shadow-sm">
+                    今日のおかずなんにしよ
+                    <div class="h-1.5 w-[245px] bg-[#F0BA32] mx-auto mt-4 rounded-full"></div>
+                </h1>
+            </div>
+
+            {{-- 中央のカード（ここが各画面の中身に置き換わる） --}}
             <!-- Page Content -->
-            <main>
+            <main class="relative z-10 w-full max-w-6xl mx-auto px-4 pb-20">
                 {{ $slot }}
             </main>
         </div>
+        <x-message-modal />
     </body>
 </html>

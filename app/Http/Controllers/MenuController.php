@@ -83,7 +83,7 @@ class MenuController extends Controller
         // 4. 一覧画面に戻す
         return redirect()->route('menus.index')->with([
             'message' => 'メニューを削除しました。',
-            'type' => 'success',
+            'type' => 'danger',
         ]);
     }
 }

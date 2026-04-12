@@ -8,7 +8,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <form action="{{ route('menus.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('menus.store') }}" method="POST" enctype="multipart/form-data" id="menu-form">
                     @csrf
                     {{-- メニュー名 --}}
                     <div>
@@ -42,7 +42,8 @@
                         <button type="button" id="deleteImageBtn" onclick="clearImage()" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600 hidden">✕</button>
                     </div>
 
-                    <button type="submit" class="mt-10">メニューを追加</button>
+                    {{-- <button type="submit" class="mt-10">メニューを追加</button> --}}
+                    <button type="submit" id="save-menu-btn" class="mt-10">メニューを追加</button>
                 </form>
             </div>
         </div>
