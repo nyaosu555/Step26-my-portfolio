@@ -22,15 +22,19 @@ class MenuController extends Controller
         $request->validate([
             'menu_name' => 'required|string|max:255',
             'type_id' => 'required|integer|exists:types,id',
-            'image_path' => 'nullable|image|mimes:png,jpg,jpeg,gif|maz:2048',
+            'image_path' => 'nullable|image|mimes:png,jpg,jpeg,gif|max:2048',
             'recipe_url' => 'nullable|url|max:255',
             'memo' => 'nullable|string|max:1000',
+        ], [
+            'image_path.max' => '画像サイズは2M以下にしてください。',
+            'image_path.image' => '選択されたファイルは画像ではありません。',
+            'image_path.mimes' => 'png, jpg, jpeg, gif形式の画像を選択してください。',
         ]);
 
         // 2.写真の保存処理
         $imagePath = null;
-        if($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('menu_images', 'public');
+        if($request->hasFile('image_path')) {
+            $imagePath = $request->file('image_path')->store('menu_images', 'public');
         }
 
         // 3.データベースに保存

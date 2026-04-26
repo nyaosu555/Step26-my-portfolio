@@ -41,7 +41,7 @@
     <div class="flex flex-col items-start gap-2 my-6">
         <label class="block text-[#DA5019] font-bold mb-2" for="">写真</label>
         {{-- 本物のボタンは隠す --}}
-        <input type="file" name="image" id="imageInput" onchange="previewImage(this)" class="hidden">
+        <input type="file" name="image_path" id="imageInput" onchange="previewImage(this)" class="hidden">
         <div class="flex items-center gap-4">
             {{-- 自作のボタン --}}
             <label for="imageInput" class="cursor-pointer bg-[#DA5019] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#b84315] transition">
@@ -50,6 +50,11 @@
             {{-- ファイル名を表示 --}}
             <span id="fileNameDisplay" class="text-gray-600 text-sm italic">ファイルが選択されていません。</span>
         </div>
+        {{-- バリデーションエラーを表示 --}}
+        <p id="jsImageError" class="text-red-500 text-sm mt-1"></p>
+        @error('image_path')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
     </div>
     {{-- 画像のプレビュー表示エリア --}}
     <div class="mt-2 w-[400px] h-[250px] relative border-dashed border rounded-lg relative">
