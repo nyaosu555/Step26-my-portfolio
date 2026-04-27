@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class MealRecordController extends Controller
 {
@@ -43,12 +44,33 @@ class MealRecordController extends Controller
         }
 
         // 2. バリデーション
+        $userId = Auth::id();    //今ログインしている人のIDを取得
+
         $validated = $request->validate([
-        // exists:テーブル名,カラム名 という書き方にします
-            'main_dish_id'  => 'required|exists:menus,id',
-            'sub_dish_a_id' => 'required|exists:menus,id',
-            'sub_dish_b_id' => 'required|exists:menus,id',
+            'main_dish_id' => [
+                'required', Rule::exists('menus', 'id')
+                ->where('user_id', $userId)->where('type_id', 1)
+            ],
+            'sub_dish_a_id' => [
+                'required', Rule::exists('menus', 'id')
+                ->where('user_id', $userId)->where('type_id', 2)
+            ],
+            'sub_dish_b_id' => [
+                'required', Rule::exists('menus', 'id')
+                ->where('user_id', $userId)->where('type_id', 3)
+            ], [
+                'main_dish_id.exists' => '選択された主菜は無効です。',
+                'main_dish_a_id.exists' => '選択された副菜Aは無効です。',
+                'main_dish_b_id.exists' => '選択された副菜Bは無効です。',
+            ]
         ]);
+
+        // $validated = $request->validate([
+        // // exists:テーブル名,カラム名 という書き方にします
+        //     'main_dish_id'  => 'required|exists:menus,id',
+        //     'sub_dish_a_id' => 'required|exists:menus,id',
+        //     'sub_dish_b_id' => 'required|exists:menus,id',
+        // ]);
 
         try {
             // 3. トランザクション（親子の保存をセットで行う）
