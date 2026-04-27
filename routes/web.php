@@ -33,7 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/menus', [MenuController::class, 'store'])->middleware('auth')->name('menus.store');
 
     // メニューの削除
-    Route::delete('/menus/{menu}', [MenuController::class, 'destroy'])->middleware('can:admin')->name('menus.destroy');
+    // Route::delete('/menus/{menu}', [MenuController::class, 'destroy'])->middleware('can:admin')->name('menus.destroy');
+    Route::delete('/menus/{menu}', [MenuController::class, 'destroy'])->middleware('auth')->name('menus.destroy');
 
     // スロット画面の表示
     Route::get('/', [SlotController::class, 'index'])
