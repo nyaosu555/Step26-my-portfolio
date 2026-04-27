@@ -281,7 +281,7 @@ if(saveBtn) {
                         } catch (error) {
                             console.error('保存エラー', error);
 
-                            if(error.response && error.response.status === 442) {
+                            if(error.response && error.response.status === 409) {
                                 // alert(error.response.data.message);
                                 window.dispatchEvent(new CustomEvent('alert-message', {
                                     detail: {message: error.response.data.message}

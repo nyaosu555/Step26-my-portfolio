@@ -40,7 +40,7 @@ class MealRecordController extends Controller
         if($exists) {
             return response()->json([
                 'message' => '本日の献立はすでに保存済みです。'
-            ], 442);
+            ], 409);
         }
 
         // 2. バリデーション
