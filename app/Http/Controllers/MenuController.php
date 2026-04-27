@@ -55,10 +55,27 @@ class MenuController extends Controller
     }
 
     public function index() {
-        // 1. ログインユーザーのメニューのみを取得
-        $menus = Menu::where('user_id', auth()->id())
-                    ->orderBy('created_at', 'desc')
-                    ->get();
+        // 現在ログインしているユーザー情報を取得
+        $user = Auth::user();
+
+        // 権限に応じて取得するメニューを分岐
+        if($user->role === 'admin') {
+            // 管理者の場合：すべてのユーザーのメニューを取得
+            $menus = Menu::with(['user', 'type'])
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+        } else {
+            // 一般ユーザーの場合：自分のメニューのみ取得
+            $menus = Menu::where('user_id', $user->id)
+                        ->with('type')
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+        }
+
+        // // 1. ログインユーザーのメニューのみを取得
+        // $menus = Menu::where('user_id', auth()->id())
+        //             ->orderBy('created_at', 'desc')
+        //             ->get();
 
         // 2. 登録フォーム用セレクトボックス用データ
         $types = Type::all();
@@ -67,13 +84,24 @@ class MenuController extends Controller
     }
 
     public function destroy(Menu $menu) {
-        // 1. ログインユーザーとメニューの所有者が一致しているかをチェック
-        if($menu->user_id !== auth()->id()) {
+        // 現在ログインしているユーザー
+        $user = Auth::user();
+
+        // 認可チェック：「メニューの所有者ではない」かつ「管理者でもない」場合
+        if($menu->user_id !== $user->id && $user->role !== 'admin') {
             return redirect()->route('menus.index')->with([
                 'message' => '削除する権限がありません',
                 'type' => 'danger',
             ]);
         }
+
+        // // 1. ログインユーザーとメニューの所有者が一致しているかをチェック
+        // if($menu->user_id !== auth()->id()) {
+        //     return redirect()->route('menus.index')->with([
+        //         'message' => '削除する権限がありません',
+        //         'type' => 'danger',
+        //     ]);
+        // }
 
         // 2. サーバー上の画像を削除
         if($menu->image_path) {
