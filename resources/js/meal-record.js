@@ -33,8 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     btnText: '削除する',
                     action: async() => {
                         try {
-                            const response = await axios.post('/meal-records/select-delete', {
-                                ids: selectedIds,
+                            // const response = await axios.post('/meal-records/select-delete', {
+                            const response = await axios.delete('/meal-records/select-delete', {
+                                data: {
+                                    ids: selectedIds,
+                                }
                             });
 
                             if(response.status === 200) {

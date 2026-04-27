@@ -120,26 +120,47 @@ class MealRecordController extends Controller
 
     // 保存した献立削除処理
     public function selectDestroy(Request $request) {
-            $ids = $request->input('ids');
+        // バリデーション（不正なデータが来るのを防ぐ）
+        $validated = $request->validate([
+            'ids'   => 'required|array|min:1',      //idsは必須、配列形式、1つ以上
+            'ids.*' => 'integer',                       //配列の中身はすべて数字
+        ]);
 
-            if(!$ids) {
-                return response()->json([
-                    'message' => 'IDがありません。'
-                ], 400);
-            }
+        // 削除の実行（自分のデータ、かつ指定されたIDのみ）
+        // $deletedには実際に削除した件数が返ってくる
+        $deleted = MealRecord::where('user_id', Auth::id())
+                                ->whereIn('id', $validated['ids'])
+                                ->delete();
 
-            MealRecord::where('user_id', Auth::id())->whereIn('id', $ids)->delete();
+        session()->flash('message', "{$deleted}件の献立を削除しました。");
+        session()->flash('type', 'success');
+
+        return response()->json([
+                'message' => "{$deleted}件 of meal records deleted."
+        ], 200);
+
+
+            // $ids = $request->input('ids');
+
+            // バリデーションのおかげで↓のコードは不要
+            // if(!$ids) {
+            //     return response()->json([
+            //         'message' => 'IDがありません。'
+            //     ], 400);
+            // }
+
+            // MealRecord::where('user_id', Auth::id())->whereIn('id', $ids)->delete();
 
             // return redirect()->route('meal_records.index')->with([
             //     'message' => count($request->ids) . '件の献立を削除しました。',
             //     'type' => 'danger',
             // ]);
-            session()->flash('message', count($ids) . '件の献立を削除しました。');
-            session()->flash('type', 'danger');
+            // session()->flash('message', count($ids) . '件の献立を削除しました。');
+            // session()->flash('type', 'danger');
 
-            return response()->json([
-                'message' => '削除成功'
-            ], 200);
+            // return response()->json([
+            //     'message' => '削除成功'
+            // ], 200);
 
     }
 }
