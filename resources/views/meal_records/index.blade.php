@@ -25,9 +25,9 @@
                         @foreach ($mealRecords as $record)
                             @php
                                 // 1. 各タイプを事前に抽出（リレーション名は mealRecordItems）
-                                $main = $record->mealRecodItems->where('type_id', \App\Enums\MenuType::Main->value)->first();
-                                $sideA = $record->mealRecodItems->where('type_id', \App\Enums\MenuType::SideA->value)->first();
-                                $sideB = $record->mealRecodItems->where('type_id', \App\Enums\MenuType::SideB->value)->first();
+                                $main = $record->mealRecordItems->where('type_id', \App\Enums\MenuType::Main->value)->first();
+                                $sideA = $record->mealRecordItems->where('type_id', \App\Enums\MenuType::SideA->value)->first();
+                                $sideB = $record->mealRecordItems->where('type_id', \App\Enums\MenuType::SideB->value)->first();
                             @endphp
                             <tr>
                                 <td class="px-6 py-4 text-center border-r border-black">

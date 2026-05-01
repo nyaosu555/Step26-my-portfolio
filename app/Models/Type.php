@@ -15,7 +15,7 @@ class Type extends Model
     }
 
     // リレーション：一つのタイプは、複数の献立記録明細をもつ
-    public function mealRecodItems(): HasMany
+    public function mealRecordItems(): HasMany
     {
         return $this->hasMany(MealRecordItem::class);
     }

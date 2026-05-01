@@ -18,7 +18,7 @@ class MealRecordController extends Controller
         // 1. ログイン中のユーザーの献立だけを取得する
         // 2. その際、紐づいている明細（MealRecordItems）も一緒に読み込む
         $mealRecords = Auth::user()->mealRecords()
-            ->with('mealRecodItems.menu')
+            ->with('mealRecordItems.menu')
             ->orderBy('date', 'desc')
             ->get();
 
