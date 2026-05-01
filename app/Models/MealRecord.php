@@ -15,7 +15,7 @@ class MealRecord extends Model
     ];
 
     // リレーション：この記録には、複数の料理（アイテム）が含まれる
-    public function mealRecodItems(): HasMany
+    public function mealRecordItems(): HasMany
     {
         return $this->hasMany(MealRecordItem::class);
     }
