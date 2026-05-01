@@ -156,6 +156,14 @@
                 </div> --}}
         </div>
     @push('scripts')
+        {{-- JavaScript側にPHPのEnum値を定数として渡す --}}
+        <script>
+            window.MENU_TYPES = {
+                MAIN: {{ \App\Enums\MenuType::Main->value }},
+                SIDE_A: {{ \App\Enums\MenuType::SideA->value }},
+                SIDE_B: {{ \App\Enums\MenuType::SideB->value }}
+            };
+        </script>
         @vite('resources/js/slot.js')
     @endpush
 </x-app-layout>

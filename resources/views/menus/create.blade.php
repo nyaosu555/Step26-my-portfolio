@@ -21,9 +21,9 @@
                     {{-- ジャンル --}}
                     <div>
                         <label for="">ジャンル※</label>
-                        <input type="radio" name="type_id" value="1" {{old('type_id') == 1 ? 'checkd' : ''}}>メイン
-                        <input type="radio" name="type_id" value="2" {{old('type_id') == 2 ? 'checkd' : ''}}>副菜A
-                        <input type="radio" name="type_id" value="3" {{old('type_id') == 3 ? 'checkd' : ''}}>副菜B
+                        <input type="radio" name="type_id" value="{{ \App\Enums\MenuType::Main->value }}" {{old('type_id') == \App\Enums\MenuType::Main->value ? 'checked' : ''}}>メイン
+                        <input type="radio" name="type_id" value="{{ \App\Enums\MenuType::SideA->value }}" {{old('type_id') == \App\Enums\MenuType::SideA->value ? 'checked' : ''}}>副菜A
+                        <input type="radio" name="type_id" value="{{ \App\Enums\MenuType::SideB->value }}" {{old('type_id') == \App\Enums\MenuType::SideB->value ? 'checked' : ''}}>副菜B
                         @error('type_id')
                             <p class="text-red-500">{{ $message }}</p>
                         @enderror

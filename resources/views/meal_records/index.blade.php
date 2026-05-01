@@ -24,10 +24,10 @@
                     <tbody class="bg-white divide-y divide-black">
                         @foreach ($mealRecords as $record)
                             @php
-                                // 1. 各タイプを事前に抽出（リレーション名は mealRecordItems である前提です）
-                                $main = $record->mealRecodItems->where('type_id', 1)->first();
-                                $sideA = $record->mealRecodItems->where('type_id', 2)->first();
-                                $sideB = $record->mealRecodItems->where('type_id', 3)->first();
+                                // 1. 各タイプを事前に抽出（リレーション名は mealRecordItems）
+                                $main = $record->mealRecodItems->where('type_id', \App\Enums\MenuType::Main->value)->first();
+                                $sideA = $record->mealRecodItems->where('type_id', \App\Enums\MenuType::SideA->value)->first();
+                                $sideB = $record->mealRecodItems->where('type_id', \App\Enums\MenuType::SideB->value)->first();
                             @endphp
                             <tr>
                                 <td class="px-6 py-4 text-center border-r border-black">

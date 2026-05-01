@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\MenuType;
 use App\Models\Menu;
 use App\Models\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rules\Enum;
 
 class MenuController extends Controller
 {
@@ -21,7 +23,12 @@ class MenuController extends Controller
         // 1.バリデーション（入力チェック）
         $request->validate([
             'menu_name' => 'required|string|max:255',
-            'type_id' => 'required|integer|exists:types,id',
+            'type_id' => [
+                'required',
+                'integer',
+                'exists:types,id',
+                new Enum(MenuType::class) // Enumで定義した値(1,2,3)以外は弾くことで厳しくチェック
+            ],
             'image_path' => 'nullable|image|mimes:png,jpg,jpeg,gif|max:2048',
             'recipe_url' => 'nullable|url|max:255',
             'memo' => 'nullable|string|max:1000',
@@ -114,7 +121,7 @@ class MenuController extends Controller
         // 4. 一覧画面に戻す
         return redirect()->route('menus.index')->with([
             'message' => 'メニューを削除しました。',
-            'type' => 'danger',
+            'type' => 'success',
         ]);
     }
 }

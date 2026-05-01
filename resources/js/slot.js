@@ -9,11 +9,15 @@ const activeTimelines = {
     sub_b: null,
 }
 
+console.log(window.MENU_TYPES.MAIN);
+console.log(window.MENU_TYPES.SIDE_A);
+console.log(window.MENU_TYPES.SIDE_B);
+
 // 当選したメニューを保持するオブジェクト（グローバルに近い場所で定義）
 let selectedResults = {
-    1: null, // 主菜
-    2: null, // 副菜A
-    3: null  // 副菜B
+    [window.MENU_TYPES.MAIN]: null, // 主菜
+    [window.MENU_TYPES.SIDE_A]: null, // 副菜A
+    [window.MENU_TYPES.SIDE_B]: null  // 副菜B
 };
 
 const saveBtn = document.getElementById('save-button');
@@ -24,9 +28,9 @@ const resultSubB = document.getElementById('result-sub-b');
 
 window.toggleSlot = function(type, isRolling) {
     const idMap = {
-        1: 'slot-main',
-        2: 'slot-sub-a',
-        3: 'slot-sub-b'
+        [window.MENU_TYPES.MAIN]: 'slot-main',
+        [window.MENU_TYPES.SIDE_A]: 'slot-sub-a',
+        [window.MENU_TYPES.SIDE_B]: 'slot-sub-b'
     };
 
     const ul = document.getElementById(idMap[type]);
@@ -40,7 +44,7 @@ window.toggleSlot = function(type, isRolling) {
         updateSaveButtonState();
 
         // 【追加】回転開始時に、該当するスロットの表示をクリアする
-        const resEl = type === 1 ? resultMain : (type === 2 ? resultSubA : resultSubB);
+        const resEl = type === window.MENU_TYPES.MAIN ? resultMain : (type === window.MENU_TYPES.SIDE_A ? resultSubA : resultSubB);
         if (resEl) resEl.textContent = '...';
 
         const items = allMenus.filter(m => m.type_id === type);
@@ -89,7 +93,11 @@ window.toggleSlot = function(type, isRolling) {
         if (resEl) resEl.textContent = wonMenu.name;
 
         // 2. 中央結果エリアの更新
-        const displayIdMap = { 1: 'display-main', 2: 'display-sub-a', 3: 'display-sub-b' };
+        const displayIdMap = {
+            [window.MENU_TYPES.MAIN]: 'display-main',
+            [window.MENU_TYPES.SIDE_A]: 'display-sub-a',
+            [window.MENU_TYPES.SIDE_B]: 'display-sub-b',
+        };
         const displaySpan = document.getElementById(displayIdMap[type]);
         if (displaySpan) {
             displaySpan.textContent = wonMenu.name;
@@ -222,9 +230,9 @@ if(saveBtn) {
         // 3. 送信データの作成
         console.log("保存処理を開始します...");
         const postData = {
-            main_dish_id: selectedResults[1].id,
-            sub_dish_a_id: selectedResults[2].id,
-            sub_dish_b_id: selectedResults[3].id,
+            main_dish_id: selectedResults[window.MENU_TYPES.MAIN].id,
+            sub_dish_a_id: selectedResults[window.MENU_TYPES.SIDE_A].id,
+            sub_dish_b_id: selectedResults[window.MENU_TYPES.SIDE_B].id,
         };
 
         // 自作の確認モーダルを呼び出す
