@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\MenuType;
 use App\Models\MealRecord;
 use App\Models\MealRecordItem;
 use Illuminate\Http\Request;
@@ -49,15 +50,15 @@ class MealRecordController extends Controller
         $validated = $request->validate([
             'main_dish_id' => [
                 'required', Rule::exists('menus', 'id')
-                ->where('user_id', $userId)->where('type_id', 1)
+                ->where('user_id', $userId)->where('type_id', MenuType::Main->value)
             ],
             'sub_dish_a_id' => [
                 'required', Rule::exists('menus', 'id')
-                ->where('user_id', $userId)->where('type_id', 2)
+                ->where('user_id', $userId)->where('type_id', MenuType::SideA->value)
             ],
             'sub_dish_b_id' => [
                 'required', Rule::exists('menus', 'id')
-                ->where('user_id', $userId)->where('type_id', 3)
+                ->where('user_id', $userId)->where('type_id', MenuType::SideB->value)
             ], [
                 'main_dish_id.exists' => '選択された主菜は無効です。',
                 'main_dish_a_id.exists' => '選択された副菜Aは無効です。',
@@ -85,15 +86,15 @@ class MealRecordController extends Controller
                 // ここで DB上のカラム名 'menu_id' と 'type_id' にマッピングします
                 $items = [
                     [
-                        'type_id' => 1, // 主菜
+                        'type_id' => MenuType::Main->value, // 主菜
                         'menu_id' => $validated['main_dish_id']
                     ],
                     [
-                        'type_id' => 2, // 副菜A
+                        'type_id' => MenuType::SideA->value, // 副菜A
                         'menu_id' => $validated['sub_dish_a_id']
                     ],
                     [
-                        'type_id' => 3, // 副菜B
+                        'type_id' => MenuType::SideB->value, // 副菜B
                         'menu_id' => $validated['sub_dish_b_id']
                     ],
                 ];
