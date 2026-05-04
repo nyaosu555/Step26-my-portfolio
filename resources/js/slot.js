@@ -9,10 +9,6 @@ const activeTimelines = {
     sub_b: null,
 }
 
-console.log(window.MENU_TYPES.MAIN);
-console.log(window.MENU_TYPES.SIDE_A);
-console.log(window.MENU_TYPES.SIDE_B);
-
 // 当選したメニューを保持するオブジェクト（グローバルに近い場所で定義）
 let selectedResults = {
     [window.MENU_TYPES.MAIN]: null, // 主菜
@@ -124,9 +120,12 @@ window.initSlot = function(menus) {
 
     allMenus = menus;
     // 2. それぞれのスロット（ul）に要素を追加する
-    setupSlot('slot-main', 1);
-    setupSlot('slot-sub-a', 2);
-    setupSlot('slot-sub-b', 3);
+    // setupSlot('slot-main', 1);
+    // setupSlot('slot-sub-a', 2);
+    // setupSlot('slot-sub-b', 3);
+    setupSlot('slot-main', window.MENU_TYPES.MAIN);
+    setupSlot('slot-sub-a', window.MENU_TYPES.SIDE_A);
+    setupSlot('slot-sub-b', window.MENU_TYPES.SIDE_B);
 
     updateSaveButtonState();
 };
@@ -293,6 +292,10 @@ if(saveBtn) {
                                 // alert(error.response.data.message);
                                 window.dispatchEvent(new CustomEvent('alert-message', {
                                     detail: {message: error.response.data.message}
+                                }));
+                            } else if (error.response && error.response.status === 422) {
+                                window.dispatchEvent(new CustomEvent('alert-message', {
+                                    detail: {message: '保存に失敗しました。内容を確認して、再度お試しください。'}
                                 }));
                             } else {
                                 // alert('保存に失敗しました。ログイン状態を確認してください。');

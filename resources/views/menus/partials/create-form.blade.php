@@ -53,7 +53,7 @@
         {{-- バリデーションエラーを表示 --}}
         <p id="jsImageError" class="text-red-500 text-sm mt-1"></p>
         @error('image_path')
-            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            <p class="text-red-500 text-sm mt-1 laravel-image-error" style="white-space: pre-line; text-align: left;">{{ $message }}</p>
         @enderror
     </div>
     {{-- 画像のプレビュー表示エリア --}}
