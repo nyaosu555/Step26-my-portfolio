@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             // const response = await axios.post('/meal-records/select-delete', {
                             const response = await axios.delete('/meal-records/select-delete', {
                                 data: {
+                                    // ids: selectedIds,
                                     ids: selectedIds,
                                 }
                             });

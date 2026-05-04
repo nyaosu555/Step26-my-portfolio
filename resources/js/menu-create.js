@@ -7,33 +7,59 @@ window.previewImage = function(input) {
     const preview = document.getElementById('imagePreview');
     const placeHolder = document.getElementById('placeholder');
     const deleteBtn = document.getElementById('deleteImageBtn');
-    const saveMenuBtn = document.getElementById('save-menu-btn');
+    const laravelErrorMsg = document.querySelector('.laravel-image-error');
     const erroeMsg = document.getElementById('jsImageError');
 
     // バリデーションルール
     const maxSize = 2 * 1024 * 1024;    //2M
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
 
+    if (erroeMsg) {
+        erroeMsg.textContent = '';
+    }
+    // PHP（Laravel）側のエラー表示も画面に残っているなら一緒に消す
+    if (laravelErrorMsg) {
+        laravelErrorMsg.style.display = 'none';
+    }
+
     if(file) {
         // バリデーションチェックの開始
         let errorMessage = '';
         if(!allowedTypes.includes(file.type)) {
-            errorMessage = '画像ファイルは（jpg, jpeg, png, gif）の中から選択してください。';
+            errorMessage = '画像ファイルは（jpg, jpeg, png, gif）の中から選択してください。\n別の画像を選ぶか、画像なしで登録する場合は、画像を削除して「登録」を押してください。';
         } else if(file.size > maxSize) {
-            errorMessage = '画像サイズは2MB以下にしてください。';
+            errorMessage = '画像サイズは2MB以下にしてください。\n別の画像を選ぶか、画像なしで登録する場合は、画像を削除して「登録」を押してください。';
         }
+
+        // 変数名を imageReader にして衝突を回避
+        const imageReader = new FileReader();
+
+        imageReader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.classList.remove('hidden');
+            deleteBtn.classList.remove('hidden');
+            if (placeHolder) placeHolder.classList.add('hidden');
+            if (fileNameDisplay) fileNameDisplay.textContent = file.name;
+
+            // エラーがあればメッセージを表示
+            if (erroeMsg) {
+                erroeMsg.textContent = errorMessage;
+            }
+        };
+
+        imageReader.readAsDataURL(file);
 
         if(errorMessage) {
             // エラーがある場合：ボタン無効化, プレビューは更新しない
             if(erroeMsg) erroeMsg.textContent = errorMessage;
-            setSubmitButtonState(saveMenuBtn, false);
-            input.value = '';
+            // setSubmitButtonState(saveMenuBtn, false);
+            // input.value = '';
             return;
         }
 
         // エラーがない場合：ボタンを有効化、メッセージを消す
         if(erroeMsg) erroeMsg.textContent = '';
-        setSubmitButtonState(saveMenuBtn, true);
+        // setSubmitButtonState(saveMenuBtn, true);
 
 
         const reader = new FileReader();
@@ -56,22 +82,22 @@ window.previewImage = function(input) {
             fileNameDisplay.textContent = fileName;
         }
 
-        setSubmitButtonState(saveMenuBtn, true);
+        // setSubmitButtonState(saveMenuBtn, true);
     }
 }
 
-function setSubmitButtonState(btn, isEnable) {
-    if(!btn) return;
-    if(isEnable) {
-        btn.disabled = false;
-        btn.classList.remove('opacity-50', 'cursor-not-allowed');
-        btn.classList.add('cursor-pointer');
-    } else {
-        btn.disabled = true;
-        btn.classList.add('opacity-50', 'cursor-not-allowed');
-        btn.classList.remove('cursor-pointer');
-    }
-}
+// function setSubmitButtonState(btn, isEnable) {
+//     if(!btn) return;
+//     if(isEnable) {
+//         btn.disabled = false;
+//         btn.classList.remove('opacity-50', 'cursor-not-allowed');
+//         btn.classList.add('cursor-pointer');
+//     } else {
+//         btn.disabled = true;
+//         btn.classList.add('opacity-50', 'cursor-not-allowed');
+//         btn.classList.remove('cursor-pointer');
+//     }
+// }
 
 window.clearImage = function() {
     const input = document.getElementById('imageInput');
@@ -92,7 +118,7 @@ window.clearImage = function() {
     placeHolder.classList.remove('hidden');
 
     // クリア後は登録ボタンを押せる状態に戻す
-    setSubmitButtonState(saveMenuBtn, true);
+    // setSubmitButtonState(saveMenuBtn, true);
 
 }
 

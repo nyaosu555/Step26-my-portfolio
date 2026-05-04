@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\MenuType;
+use App\Http\Requests\StoreMenuRequest;
 use App\Models\Menu;
 use App\Models\Type;
 use Illuminate\Http\Request;
@@ -19,24 +20,33 @@ class MenuController extends Controller
     }
 
     //
-    public function store(Request $request) {
-        // 1.バリデーション（入力チェック）
-        $request->validate([
-            'menu_name' => 'required|string|max:255',
-            'type_id' => [
-                'required',
-                'integer',
-                'exists:types,id',
-                new Enum(MenuType::class) // Enumで定義した値(1,2,3)以外は弾くことで厳しくチェック
-            ],
-            'image_path' => 'nullable|image|mimes:png,jpg,jpeg,gif|max:2048',
-            'recipe_url' => 'nullable|url|max:255',
-            'memo' => 'nullable|string|max:1000',
-        ], [
-            'image_path.max' => '画像サイズは2M以下にしてください。',
-            'image_path.image' => '選択されたファイルは画像ではありません。',
-            'image_path.mimes' => 'png, jpg, jpeg, gif形式の画像を選択してください。',
-        ]);
+    // public function store(Request $request) {
+    public function store(StoreMenuRequest $request) {
+
+
+        // 【重要】ここにデータがきた時点で、すでにバリデーションは「合格」している。
+        // 不合格の場合は、このメソッドが動く前に画面へ戻される。
+
+        // 1. 検査済みのデータだけを取得
+        $validated = $request->validated();
+
+        // 1.バリデーション（入力チェック）→FormRequestで管理するためコメントアウト
+        // $request->validate([
+        //     'menu_name' => 'required|string|max:255',
+        //     'type_id' => [
+        //         'required',
+        //         'integer',
+        //         'exists:types,id',
+        //         new Enum(MenuType::class) // Enumで定義した値(1,2,3)以外は弾くことで厳しくチェック
+        //     ],
+        //     'image_path' => 'nullable|image|mimes:png,jpg,jpeg,gif|max:2048',
+        //     'recipe_url' => 'nullable|url|max:255',
+        //     'memo' => 'nullable|string|max:1000',
+        // ], [
+        //     'image_path.max' => '画像サイズは2M以下にしてください。',
+        //     'image_path.image' => '選択されたファイルは画像ではありません。',
+        //     'image_path.mimes' => 'png, jpg, jpeg, gif形式の画像を選択してください。',
+        // ]);
 
         // 2.写真の保存処理
         $imagePath = null;
@@ -44,15 +54,25 @@ class MenuController extends Controller
             $imagePath = $request->file('image_path')->store('menu_images', 'public');
         }
 
-        // 3.データベースに保存
+        // 3. データベースに保存
         Menu::create([
-            'user_id' => Auth::id(),
-            'name' => $request->menu_name,
-            'type_id' => $request->type_id,
-            'image_path' => $imagePath,
-            'recipe_url' => $request->recipe_url,
-            'memo' => $request->memo,
+            'user_id'       => Auth::id(),
+            'name'          => $validated['menu_name'],
+            'type_id'       => $validated['type_id'],
+            'image_path'    => $imagePath,
+            'recipe_url'    => $validated['recipe_url'] ?? null,
+            'memo'          => $validated['memo'] ?? null,
         ]);
+
+        // 3.データベースに保存
+        // Menu::create([
+        //     'user_id' => Auth::id(),
+        //     'name' => $request->menu_name,
+        //     'type_id' => $request->type_id,
+        //     'image_path' => $imagePath,
+        //     'recipe_url' => $request->recipe_url,
+        //     'memo' => $request->memo,
+        // ]);
 
         // return redirect()->route('menus.index')->with('success', 'メニューを登録しました。');
         return redirect()->route('menus.index')->with([

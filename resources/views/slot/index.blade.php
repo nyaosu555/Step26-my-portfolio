@@ -44,7 +44,8 @@
                             {{-- $isReadyがfalseならスタートボタン無効化 --}}
                             <button
                             @if ($isReady)
-                                @click="rolling = !rolling; toggleSlot(1, rolling)"
+                                {{-- @click="rolling = !rolling; toggleSlot(1, rolling)" --}}
+                                @click="rolling = !rolling; toggleSlot(window.MENU_TYPES.MAIN, rolling)"
                             @endif
                                 {{-- :class="rolling ? 'bg-red-500 hover:bg-red-600' : 'bg-[#FBBF24] hover:bg-[#F59E0B]'" --}}
                                 :class="!{{ $isReady ? 'true' : 'false' }} ? 'bg-red-400 cursor-not-allowed opacity-50' : (rolling ? 'bg-red-500 hover:bg-red-600' : 'bg-[#FBBF24] hover:bg-[#F59E0B]')"
@@ -82,7 +83,7 @@
                             {{-- $isReadyがfalseならスタートボタン無効化 --}}
                             <button
                             @if ($isReady)
-                                @click="rolling = !rolling; toggleSlot(2, rolling)"
+                                @click="rolling = !rolling; toggleSlot(window.MENU_TYPES.SIDE_A, rolling)"
                             @endif
                                 {{-- :class="rolling ? 'bg-red-500 hover:bg-red-600' : 'bg-[#FBBF24] hover:bg-[#F59E0B]'" --}}
                                 :class="!{{ $isReady ? 'true' : 'false' }} ? 'bg-red-400 cursor-not-allowed opacity-50' : (rolling ? 'bg-red-500 hover:bg-red-600' : 'bg-[#FBBF24] hover:bg-[#F59E0B]')"
@@ -120,7 +121,8 @@
                             {{-- $isReadyがfalseならスタートボタン無効化 --}}
                             <button
                             @if ($isReady)
-                                @click="rolling = !rolling; toggleSlot(3, rolling)"
+                                {{-- @click="rolling = !rolling; toggleSlot(3, rolling)" --}}
+                                @click="rolling = !rolling; toggleSlot(window.MENU_TYPES.SIDE_B, rolling)"
                             @endif
                                 {{-- :class="rolling ? 'bg-red-500 hover:bg-red-600' : 'bg-[#FBBF24] hover:bg-[#F59E0B]'" --}}
                                 :class="!{{ $isReady ? 'true' : 'false' }} ? 'bg-red-400 cursor-not-allowed opacity-50' : (rolling ? 'bg-red-500 hover:bg-red-600' : 'bg-[#FBBF24] hover:bg-[#F59E0B]')"
