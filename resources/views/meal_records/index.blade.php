@@ -50,6 +50,10 @@
                     </tbody>
                 </table>
             </div>
+        {{-- ページネーション --}}
+        <div class="mt-6 px-2">
+            {{ $mealRecords->links() }}
+        </div>
         {{-- ナビゲーション --}}
                 <x-sub-navigation current="meal-records" />
         </div>

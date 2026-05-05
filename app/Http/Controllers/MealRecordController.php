@@ -22,7 +22,8 @@ class MealRecordController extends Controller
         $mealRecords = Auth::user()->mealRecords()
             ->with('mealRecordItems.menu')
             ->orderBy('date', 'desc')
-            ->get();
+            // ->get();
+            ->paginate(10);     //1ページ20件
 
         // 3. ビュー（画面）にデータを渡す
         return view('meal_records.index', compact('mealRecords'));
