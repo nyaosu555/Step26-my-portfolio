@@ -90,13 +90,15 @@ class MenuController extends Controller
             // 管理者の場合：すべてのユーザーのメニューを取得
             $menus = Menu::with(['user', 'type'])
                         ->orderBy('created_at', 'desc')
-                        ->get();
+                        // ->get();
+                        ->paginate(10);
         } else {
             // 一般ユーザーの場合：自分のメニューのみ取得
             $menus = Menu::where('user_id', $user->id)
                         ->with('type')
                         ->orderBy('created_at', 'desc')
-                        ->get();
+                        // ->get();
+                         ->paginate(10);
         }
 
         // // 1. ログインユーザーのメニューのみを取得

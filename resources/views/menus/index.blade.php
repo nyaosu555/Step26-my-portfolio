@@ -2,7 +2,9 @@
     {{-- 1. x-dataで「今どのタブを開いているか」という状態を定義 --}}
     {{-- session('show_create')があれば登録画面、なければ一覧を初期表示にする --}}
     <div
-        x-data="{ tab: '{{ session('type') === 'success' ? 'list' : 'create' }}' }"
+        x-data="{
+            tab: '{{ (request()->has('page') || session('type') === 'success') ? 'list' : 'create' }}' }"
+            {{-- tab: '{{ (request('tab') === 'list' || request()->has('page') || session('type') === 'success') ? 'list' : 'create' }}' }" --}}
         {{-- class="max-w-4xl mx-auto p-6" --}}
         class="relative z-10 w-[80%] mx-auto bg-[#fee5a5] rounded-[2em] shadow-2xl p-8 md:p-10 text-center"
     >
@@ -17,14 +19,16 @@
             {{-- 2. タブのスイッチ --}}
             <div class="flex justify-start space-x-8 border-b border-gray-200 mb-8">
                 <button
-                    @click="tab = 'create'"
+                    @click="tab = 'create';
+                        window.history.replaceState(null, '', window.location.pathname);
+                    "
                     :class="tab === 'create' ? 'border-b-2 border-orange-500 text-orange-600 font-bold' : 'text-gray-400' "
                     class="pb-2 px-4 transition-all"
                 >
                     メニュー登録
                 </button>
                 <button
-                    @click="tab = 'list'"
+                    @click="window.location.href = '{{ route('menus.index') }}?page=1'"
                     :class="tab === 'list' ? 'border-b-2 border-orange-500 text-orange-600 font-bold' : 'text-gray-400' "
                     class="pb-2 px-4 transition-all"
                 >
@@ -45,9 +49,13 @@
             <div x-show="tab === 'list'" x-cloak>
                 <div class="bg-white p-8 rounded-2xl shadow-sm">
                     <p class="text-orange-700 font-bold mb-6 text-[18px]">
-                        登録件数: {{ $menus->count() }}件
+                        登録件数: {{ $menus->total() }}件
                     </p>
                     @include('menus.partials.list-items')   {{--別ファイルで管理--}}
+                </div>
+                {{-- ページネーション --}}
+                <div class="mt-6 px-2">
+                    {{ $menus->links() }}
                 </div>
             </div>
         {{-- ナビゲーション --}}
