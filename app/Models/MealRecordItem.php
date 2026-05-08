@@ -20,7 +20,7 @@ class MealRecordItem extends Model
     // リレーション：この明細は、ひとつのメニューを持つ
     public function menu(): BelongsTo
     {
-        return $this->belongsTo(Menu::class);
+        return $this->belongsTo(Menu::class)->withTrashed();
     }
 
     // リレーション：この明細は、ひとつの料理タイプ（メイン/副菜など）を持つ
