@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use App\Enums\MenuType;
 use App\Models\Menu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SlotController extends Controller
 {
     //
     public function index() {
         // 1. ログインユーザーのメニューを「メイン」「副菜A」「副菜B」に分けて取得する
-        $menus = Menu::where('user_id', auth()->id())->get();
+        // $menus = Menu::where('user_id', auth()->id())->get();
+        $menus = Auth::user()->menus;
 
         // 2. 各料理タイプの登録件数を集計
         // $counts = [
