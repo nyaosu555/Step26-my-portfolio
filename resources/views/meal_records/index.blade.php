@@ -37,13 +37,13 @@
                                     {{str_replace('-', '/', $record->date)}}
                                 </td>
                                 <td class="px-6 py-4 text-left whitespace-nowrap text-sm font-medium text-gray-700 border-r border-black">
-                                    {{$main->menu->name ?? '_'}}
+                                    {{$main->menu->name ?? '（削除済み）'}}
                                 </td>
                                 <td class="px-6 py-4 text-left whitespace-nowrap text-sm font-medium text-gray-700 border-r border-black">
-                                    {{$sideA->menu->name ?? '_'}}
+                                    {{$sideA->menu->name ?? '（削除済み）'}}
                                 </td>
                                 <td class="px-6 py-4 text-left whitespace-nowrap text-sm font-medium text-gray-700 border-r border-black">
-                                    {{$sideB->menu->name ?? '_'}}
+                                    {{$sideB->menu->name ?? '（削除済み）'}}
                                 </td>
                             </tr>
                         @endforeach

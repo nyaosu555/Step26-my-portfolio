@@ -55,8 +55,15 @@ class MenuController extends Controller
         }
 
         // 3. データベースに保存
-        Menu::create([
-            'user_id'       => Auth::id(),
+        // Menu::create([
+        //     'user_id'       => Auth::id(),
+        //     'name'          => $validated['menu_name'],
+        //     'type_id'       => $validated['type_id'],
+        //     'image_path'    => $imagePath,
+        //     'recipe_url'    => $validated['recipe_url'] ?? null,
+        //     'memo'          => $validated['memo'] ?? null,
+        // ]);
+        Auth::user()->menus()->create([
             'name'          => $validated['menu_name'],
             'type_id'       => $validated['type_id'],
             'image_path'    => $imagePath,
@@ -94,11 +101,15 @@ class MenuController extends Controller
                         ->paginate(10);
         } else {
             // 一般ユーザーの場合：自分のメニューのみ取得
-            $menus = Menu::where('user_id', $user->id)
+            // $menus = Menu::where('user_id', $user->id)
+            //             ->with('type')
+            //             ->orderBy('created_at', 'desc')
+            //             // ->get();
+            //              ->paginate(10);
+            $menus = $user->menus()
                         ->with('type')
                         ->orderBy('created_at', 'desc')
-                        // ->get();
-                         ->paginate(10);
+                        ->paginate(10);
         }
 
         // // 1. ログインユーザーのメニューのみを取得
