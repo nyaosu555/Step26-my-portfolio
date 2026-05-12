@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\MenuType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -25,4 +26,21 @@ class MealRecord extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    // 主菜の明細を取得
+    public function mainDish()
+    {
+        return $this->hasOne(MealRecordItem::class)->where('type_id', MenuType::Main->value);
+    }
+    // 副菜Aの明細を取得
+    public function sideDishA()
+    {
+        return $this->hasOne(MealRecordItem::class)->where('type_id', MenuType::SideA->value);
+    }
+    // 副菜Bの明細を取得
+    public function sideDishB()
+    {
+        return $this->hasOne(MealRecordItem::class)->where('type_id', MenuType::SideB->value);
+    }
+
 }
