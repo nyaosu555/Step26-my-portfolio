@@ -16,16 +16,31 @@ use Illuminate\Validation\Rule;
 class MealRecordController extends Controller
 {
     //献立の一覧表示をする
-    public function index() {
-        // 1. ログイン中のユーザーの献立だけを取得する
-        // 2. その際、紐づいている明細（MealRecordItems）も一緒に読み込む
-        $mealRecords = Auth::user()->mealRecords()
-            ->with('mealRecordItems.menu')
-            ->orderBy('date', 'desc')
-            // ->get();
-            ->paginate(10);     //1ページ20件
+    // public function index() {
+    //     // 1. ログイン中のユーザーの献立だけを取得する
+    //     // 2. その際、紐づいている明細（MealRecordItems）も一緒に読み込む
+    //     $mealRecords = Auth::user()->mealRecords()
+    //         ->with('mealRecordItems.menu')
+    //         ->orderBy('date', 'desc')
+    //         // ->get();
+    //         ->paginate(10);     //1ページ20件
 
-        // 3. ビュー（画面）にデータを渡す
+    //     // 3. ビュー（画面）にデータを渡す
+    //     return view('meal_records.index', compact('mealRecords'));
+    // }
+    public function index() {
+        // 1. ログインユーザーの献立だけを取得する
+        // 2. その際、主菜・副菜A・副菜Bをそれぞれの窓口（作成したリレーション）経由で一括読み込みする
+        $mealRecords = Auth::user()->mealRecords()
+            ->with([
+                'mainDish.menu',
+                'sideDishA.menu',
+                'sideDishB.menu',
+            ])
+            ->orderBy('date', 'desc')
+            ->paginate(10);
+
+        // 3. ビューにデータを渡す
         return view('meal_records.index', compact('mealRecords'));
     }
 
