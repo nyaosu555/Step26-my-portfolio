@@ -55,7 +55,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     // リレーション：このユーザーは、複数のメニュー登録をもつ
-    // public function menu(): HasMany
     public function menus(): HasMany
     {
         return $this->hasMany(Menu::class);

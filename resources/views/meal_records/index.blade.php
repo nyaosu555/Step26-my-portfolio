@@ -23,12 +23,6 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-black">
                         @foreach ($mealRecords as $record)
-                            {{-- @php
-                                // 1. 各タイプを事前に抽出（リレーション名は mealRecordItems）
-                                $main = $record->mealRecordItems->where('type_id', \App\Enums\MenuType::Main->value)->first();
-                                $sideA = $record->mealRecordItems->where('type_id', \App\Enums\MenuType::SideA->value)->first();
-                                $sideB = $record->mealRecordItems->where('type_id', \App\Enums\MenuType::SideB->value)->first();
-                            @endphp --}}
                             <tr>
                                 <td class="px-6 py-4 text-center border-r border-black">
                                     <input type="checkbox" name="record_ids[]" value="{{$record->id}}" class="record-checkbox rounded border-gray-300 text-yellow-600 focus:ring-yellow-500">
@@ -37,15 +31,12 @@
                                     {{str_replace('-', '/', $record->date)}}
                                 </td>
                                 <td class="px-6 py-4 text-left whitespace-nowrap text-sm font-medium text-gray-700 border-r border-black">
-                                    {{-- {{$main->menu->name ?? '（削除済み）'}} --}}
                                     {{$record->mainDish?->menu?->name ?? '（削除済み）'}}
                                 </td>
                                 <td class="px-6 py-4 text-left whitespace-nowrap text-sm font-medium text-gray-700 border-r border-black">
-                                    {{-- {{$sideA->menu->name ?? '（削除済み）'}} --}}
                                     {{$record->sideDishA?->menu?->name ?? '（削除済み）'}}
                                 </td>
                                 <td class="px-6 py-4 text-left whitespace-nowrap text-sm font-medium text-gray-700 border-r border-black">
-                                    {{-- {{$sideB->menu->name ?? '（削除済み）'}} --}}
                                     {{$record->sideDishB?->menu?->name ?? '（削除済み）'}}
                                 </td>
                             </tr>

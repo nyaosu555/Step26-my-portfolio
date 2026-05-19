@@ -9,15 +9,6 @@
         @enderror
     </div>
     {{-- ジャンル --}}
-    {{-- <div>
-        <label>ジャンル※</label>
-        <input type="radio" name="type_id" value="1" {{old('type_id') == 1 ? 'checkd' : ''}}>メイン
-        <input type="radio" name="type_id" value="2" {{old('type_id') == 2 ? 'checkd' : ''}}>副菜A
-        <input type="radio" name="type_id" value="3" {{old('type_id') == 3 ? 'checkd' : ''}}>副菜B
-        @error('type_id')
-            <p class="text-red-500">{{ $message }}</p>
-        @enderror
-    </div> --}}
     <div class="flex flex-col items-start gap-2 my-6">
         <label class="block text-[#DA5019] font-bold mb-2">ジャンル※</label>
         <div class="flex flex-wrap gap-6">

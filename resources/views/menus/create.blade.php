@@ -1,7 +1,7 @@
-{{-- 1. 親レイアウトを継承する --}}
+{{-- 親レイアウトを継承する --}}
 <x-app-layout>
 
-{{-- 2. メインコンテンツ（HTML）部分 --}}
+{{-- メインコンテンツ（HTML）部分 --}}
     <x-slot name="header">
         <h1>メニュー登録</h1>
     </x-slot>
@@ -42,14 +42,13 @@
                         <button type="button" id="deleteImageBtn" onclick="clearImage()" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600 hidden">✕</button>
                     </div>
 
-                    {{-- <button type="submit" class="mt-10">メニューを追加</button> --}}
                     <button type="submit" id="save-menu-btn" class="mt-10">メニューを追加</button>
                 </form>
             </div>
         </div>
     </div>
 
-    {{-- 3. JSを親の@stack('script')に送り込む --}}
+    {{-- JSを親の@stack('script')に送り込む --}}
     @push('scripts')
         @vite('resources/js/menu-create.js')
     @endpush
