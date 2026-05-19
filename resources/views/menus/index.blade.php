@@ -1,11 +1,9 @@
 <x-app-layout>
-    {{-- 1. x-dataで「今どのタブを開いているか」という状態を定義 --}}
+    {{-- x-dataで「今どのタブを開いているか」という状態を定義 --}}
     {{-- session('show_create')があれば登録画面、なければ一覧を初期表示にする --}}
     <div
         x-data="{
             tab: '{{ (request()->has('page') || session('type') === 'success') ? 'list' : 'create' }}' }"
-            {{-- tab: '{{ (request('tab') === 'list' || request()->has('page') || session('type') === 'success') ? 'list' : 'create' }}' }" --}}
-        {{-- class="max-w-4xl mx-auto p-6" --}}
         class="relative z-10 w-[80%] mx-auto bg-[#fee5a5] rounded-[2em] shadow-2xl p-8 md:p-10 text-center"
     >
         <x-flash-message
@@ -16,7 +14,7 @@
                 メニュー管理
             </h2>
 
-            {{-- 2. タブのスイッチ --}}
+            {{-- タブのスイッチ --}}
             <div class="flex justify-start space-x-8 border-b border-gray-200 mb-8">
                 <button
                     @click="tab = 'create';
@@ -36,7 +34,7 @@
                 </button>
             </div>
 
-            {{-- 3. コンテンツの切り替え --}}
+            {{-- コンテンツの切り替え --}}
 
             {{-- メニュー登録フォーム --}}
             <div x-show="tab === 'create'" x-cloak>

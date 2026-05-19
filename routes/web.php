@@ -25,15 +25,10 @@ Route::middleware('auth')->group(function () {
     // メニュー一覧表示
     Route::get('/menus', [MenuController::class, 'index'])->middleware('auth')->name('menus.index');
 
-    // メニュー登録画面表示
-    // Route::get('/menus/create', [MenuController::class, 'create'])->name('menus.create');
-
     // メニューデータ登録
-    // Route::post('/menus', [MenuController::class, 'store'])->middleware('can:admin')->name('menus.store');
     Route::post('/menus', [MenuController::class, 'store'])->middleware('auth')->name('menus.store');
 
     // メニューの削除
-    // Route::delete('/menus/{menu}', [MenuController::class, 'destroy'])->middleware('can:admin')->name('menus.destroy');
     Route::delete('/menus/{menu}', [MenuController::class, 'destroy'])->middleware('auth')->name('menus.destroy');
 
     // スロット画面の表示
@@ -45,7 +40,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/meal-records', [MealRecordController::class, 'store'])->middleware('auth');
 
     // 保存した献立の削除
-    // Route::post('/meal-records/select-delete', [MealRecordController::class, 'selectDestroy'])->middleware('auth');
     Route::delete('/meal-records/select-delete', [MealRecordController::class, 'selectDestroy'])->middleware('auth')->name('meal_records.select_destroy');
 });
 

@@ -6,6 +6,7 @@ use App\Enums\MenuType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class MealRecord extends Model
 {
@@ -28,17 +29,17 @@ class MealRecord extends Model
     }
 
     // 主菜の明細を取得
-    public function mainDish()
+    public function mainDish() : HasOne
     {
         return $this->hasOne(MealRecordItem::class)->where('type_id', MenuType::Main->value);
     }
     // 副菜Aの明細を取得
-    public function sideDishA()
+    public function sideDishA() : HasOne
     {
         return $this->hasOne(MealRecordItem::class)->where('type_id', MenuType::SideA->value);
     }
     // 副菜Bの明細を取得
-    public function sideDishB()
+    public function sideDishB() : HasOne
     {
         return $this->hasOne(MealRecordItem::class)->where('type_id', MenuType::SideB->value);
     }
