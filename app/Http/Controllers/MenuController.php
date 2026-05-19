@@ -8,9 +8,12 @@ use App\Models\Type;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class MenuController extends Controller
 {
+    use AuthorizesRequests;
 
     // メニュー登録画面を表示
     public function create() {
@@ -90,18 +93,11 @@ class MenuController extends Controller
 
     // メニューの削除処理
     public function destroy(Menu $menu) {
-        // 現在ログインしているユーザー
-        $user = Auth::user();
-
-        // 認可チェック：「メニューの所有者ではない」かつ「管理者でもない」場合
-        if($menu->user_id !== $user->id && $user->role !== 'admin') {
-            return redirect()->route('menus.index')->with([
-                'message' => '削除する権限がありません',
-                'type' => 'danger',
-            ]);
-        }
-
         try {
+            // Laravelが自動的に MenuPolicy の delete メソッドを呼び出してチェックする
+            // 権限がない場合は自動的に「catch」に入る
+            $this->authorize('delete', $menu);
+
             // データベースから削除
             $menu->delete();
 
@@ -116,6 +112,15 @@ class MenuController extends Controller
             return redirect()->route('menus.index')->with([
                 'message' => 'メニューを削除しました。',
                 'type' => 'success',
+            ]);
+
+        } catch (AuthorizationException $e) {
+            // 👈 3. 権限エラー（403）が発生した場合はここへジャンプします！
+            Log::warning("不審なアクセス: ユーザーID " . auth()->id() . " がメニューID " . $menu->id . " を削除しようとしました。");
+
+            return redirect()->route('menus.index')->with([
+                'message' => '削除する権限がありません。',
+                'type' => 'danger', // 赤色のFlashメッセージにする場合
             ]);
 
         } catch (\Throwable $e) {
