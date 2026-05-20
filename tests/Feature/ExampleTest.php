@@ -14,6 +14,7 @@ class ExampleTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        // トップ画面がログイン必須のためリダイレクト302を返す
+        $response->assertStatus(302);
     }
 }
