@@ -129,4 +129,25 @@ class SlotControllerTest extends TestCase
         $response->assertSee('副菜A：0/3');
         $response->assertSee('副菜B：0/3');
     }
+
+    /**
+     * 【正常系】メニューの登録件数が各料理タイプ3件以上ある場合、スロット画面が正常に表示される
+     */
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_slot_opens_normally_when_menu_count_is_sufficient(): void
+    {
+        $user = User::factory()->create();
+
+        // 💡 既存のテストと違い、きっちり「3件ずつ」作成して条件を満たす
+        Menu::factory()->count(3)->create(['user_id' => $user->id, 'type_id' => MenuType::Main->value]);
+        Menu::factory()->count(3)->create(['user_id' => $user->id, 'type_id' => MenuType::SideA->value]);
+        Menu::factory()->count(3)->create(['user_id' => $user->id, 'type_id' => MenuType::SideB->value]);
+
+        $response = $this->actingAs($user)->get('/');
+
+        $response->assertOk();
+
+        // 💡 3件以上あるので、警告メッセージが「表示されていないこと」を検証
+        $response->assertDontSee('スロットを回すための登録メニュー件数が足りません。');
+    }
 }
