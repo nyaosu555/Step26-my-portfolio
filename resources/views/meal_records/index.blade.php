@@ -37,7 +37,7 @@
                             {{-- カードボディ：料理の中身（バッジ風のラベルで視認性アップ） --}}
                             <div class="p-4 space-y-2.5 text-sm font-medium">
                                 <div class="flex items-start">
-                                    <span class="w-16 text-xs bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-bold text-center mr-3 shrink-0">メイン</span>
+                                    <span class="w-16 text-xs bg-red-50 text-red-800 px-1.5 py-0.5 rounded font-bold text-center mr-3 shrink-0">メイン</span>
                                     <span class="text-gray-800">{{ $record->mainDish?->menu?->name ?? '（削除済み）' }}</span>
                                 </div>
                                 <div class="flex items-start border-t border-gray-100 pt-2">
