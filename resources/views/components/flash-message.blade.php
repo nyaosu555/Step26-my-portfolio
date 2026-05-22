@@ -44,5 +44,5 @@
     </span>
 
     {{-- JSで書き換えるテキストの器 --}}
-    <span id="flash-text">{{ $message }}</span>
+    <span id="flash-text" class="text-sm md:text-base">{{ $message }}</span>
 </div>

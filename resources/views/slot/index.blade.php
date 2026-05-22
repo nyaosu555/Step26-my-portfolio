@@ -10,20 +10,20 @@
 
     {{-- メニュー登録件数が足りない時のメッセージ --}}
     @if (!$isReady)
-        <div class="absolute top-[40%] left-[50%] translate-x-[-50%] z-20 w-full max-w-4xl mb-6 bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 rounded shadow-md" role="alert">
-            <p class="mb-4 font-bold text-lg flex gap-2 items-center">
+        <div class="absolute top-0 md:top-[30%] left-[50%] translate-x-[-50%] z-20 w-full max-w-4xl mb-6 bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 rounded shadow-md" role="alert">
+            <p class="mb-4 font-bold text-base md:text-lg flex gap-2 items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-orange-500">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
                 </svg>
                 スロットを回すための登録メニュー件数が足りません。
             </p>
-            <p>各料理タイプを3つ以上登録してください。</p>
+            <p class="text-sm md:text-base">各料理タイプを3つ以上登録してください。</p>
             <div class="flex gap-4 mt-2 text-sm font-semibold">
                 <span>メイン：{{ $counts['main'] }}/3</span>
                 <span>副菜A：{{ $counts['side_a'] }}/3</span>
                 <span>副菜B：{{ $counts['side_b'] }}/3</span>
             </div>
-            <a href="{{ route('menus.index') }}" class="mt-4 inline-flex items-center gap-2 hover:underline">
+            <a href="{{ route('menus.index') }}" class="text-sm md:text-base mt-4 inline-flex items-center gap-2 hover:underline">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
                 </svg>
