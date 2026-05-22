@@ -34,10 +34,10 @@
 
     <x-flash-message />
 
-    <div class="relative z-10 w-[80%] mx-auto bg-[#fee5a5] rounded-[2em] shadow-2xl p-8 md:p-10 text-center flex flex-col gap-10 justify-end">
+    <div class="relative z-10 w-[98%] md:w-[80%] mx-auto bg-[#fee5a5] rounded-[2em] shadow-2xl p-8 md:p-10 text-center flex flex-col gap-10 justify-end">
         {{-- メインの黄色いカード --}}
         {{-- スロットコンテナ --}}
-        <div class="flex justify-around items-center gap-[24px]">
+        <div class="flex justify-around items-center gap-[32px] flex-col md:flex-row gap-[24px]">
             @foreach ($slots as $slot )
                 <x-slot-panel
                     :id="$slot['id']"
@@ -48,14 +48,14 @@
             @endforeach
         </div>
         <div id="slot-result-display"
-            class="hidden mt-6 p-4 bg-white/50 backdrop-blur-sm rounded-2xl border-2 border-dashed border-orange-300 flex items-center justify-center">
+            class="hidden mt-3 md:mt-6 p-4 bg-white/50 backdrop-blur-sm rounded-2xl border-2 border-dashed border-orange-300 flex items-center justify-center">
             <div class="text-orange-900 font-bold text-lg md:text-xl flex items-center gap-3">
-                <span class="text-sm text-orange-600 font-normal">本日の献立：</span>
-                <span id="display-main"></span>
+                <span class="md:text-sm text-xs text-orange-600 font-normal">本日の献立：</span>
+                <span id="display-main" class="text-sm md:text-base"></span>
                 <span class="text-orange-300">/</span>
-                <span id="display-sub-a"></span>
+                <span id="display-sub-a" class="text-sm md:text-base"></span>
                 <span class="text-orange-300">/</span>
-                <span id="display-sub-b"></span>
+                <span id="display-sub-b" class="text-sm md:text-base"></span>
             </div>
         </div>
 

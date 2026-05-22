@@ -37,7 +37,7 @@
             <div class="absolute inset-0 bg-black/50 backrdop-blur-sm"></div>
 
             {{-- 共通タイトル --}}
-            <div class="relative z-10 text-center my-20 md:mb-16">
+            <div class="relative z-10 text-center my-10 md:my-20 md:mb-16">
                 <h1 class="text-[#ffffff] text-3xl md:text-5xl font-bold mb-8 drop-shadow-sm">
                     今日のおかずなんにしよ
                     <div class="h-1.5 w-[245px] bg-[#F0BA32] mx-auto mt-4 rounded-full"></div>
