@@ -1,6 +1,6 @@
 @props(['id', 'label', 'type', 'isReady'])
 
-<div class="space-y-4 w-[calc((100%-48px)/3)]">
+<div class="w-full max-w-[350px] space-y-4 md:w-[calc((100%-48px)/3)]">
     <h2 class="text-[#d97706] font-bold text-xl">{{ $label }}</h2>
     <div x-data="{ rolling: false }" class="space-y-4">
         <div class="slot-container aspect-square bg-white rounded-2xl border-4 border-[#d97706] overflow-hidden shadow-inner">
