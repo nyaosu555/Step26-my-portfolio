@@ -4,12 +4,12 @@
     <div
         x-data="{
             tab: '{{ (request()->has('page') || session('type') === 'success') ? 'list' : 'create' }}' }"
-        class="relative z-10 w-[80%] mx-auto bg-[#fee5a5] rounded-[2em] shadow-2xl p-8 md:p-10 text-center"
+        class="relative z-10 w-[98%] md:w-[80%] mx-auto bg-[#fee5a5] rounded-[2em] shadow-2xl p-4 md:p-10 text-center"
     >
         <x-flash-message
             :message="session('message')"
             :type="session('type')" />
-        <div class="mx-auto py-12 flex flex-col gap-10">
+        <div class="mx-auto py-6 sm:py-12 flex flex-col gap-6 sm:gap-10">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 メニュー管理
             </h2>
@@ -21,14 +21,14 @@
                         window.history.replaceState(null, '', window.location.pathname);
                     "
                     :class="tab === 'create' ? 'border-b-2 border-orange-500 text-orange-600 font-bold' : 'text-gray-400' "
-                    class="pb-2 px-4 transition-all"
+                    class="pb-2 px-4 transition-all text-sm md:text-base"
                 >
                     メニュー登録
                 </button>
                 <button
                     @click="window.location.href = '{{ route('menus.index') }}?page=1'"
                     :class="tab === 'list' ? 'border-b-2 border-orange-500 text-orange-600 font-bold' : 'text-gray-400' "
-                    class="pb-2 px-4 transition-all"
+                    class="pb-2 px-4 transition-all text-sm md:text-base"
                 >
                     登録メニュー一覧
                 </button>
@@ -38,14 +38,14 @@
 
             {{-- メニュー登録フォーム --}}
             <div x-show="tab === 'create'" x-cloak>
-                <div class="bg-white p-8 rounded-2xl shadow-sm">
+                <div class="bg-white p-4 md:p-8 rounded-2xl shadow-sm">
                     @include('menus.partials.create-form')   {{--別ファイルで管理--}}
                 </div>
             </div>
 
             {{-- 登録メニュー一覧 --}}
             <div x-show="tab === 'list'" x-cloak>
-                <div class="bg-white p-8 rounded-2xl shadow-sm">
+                <div class="bg-white p-4 md:p-8 rounded-2xl shadow-sm">
                     <p class="text-orange-700 font-bold mb-6 text-[18px]">
                         登録件数: {{ $menus->total() }}件
                     </p>
