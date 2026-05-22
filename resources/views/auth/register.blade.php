@@ -49,7 +49,7 @@
         </div>
 
         <div class="flex flex-col items-center justify-end mt-4">
-            <x-primary-button  class="py-10 pt-4 pb-4 px-10 bg-[#FFB908] text-[20px] ms-3">
+            <x-primary-button  class="px-14 py-2 md:py-4 md:px-20 bg-[#FFB908] text-base md:text-[20px] ms-3">
                 {{ __('新規登録') }}
             </x-primary-button>
 
