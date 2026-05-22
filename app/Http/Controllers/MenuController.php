@@ -76,13 +76,12 @@ class MenuController extends Controller
             // 管理者の場合：すべてのユーザーのメニューを取得
             $menus = Menu::with(['user', 'type'])
                         ->orderBy('created_at', 'desc')
-                        // ->get();
-                        ->paginate(10);
+                        ->paginate(12);
         } else {
             $menus = $user->menus()
                     ->with('type')
                     ->orderBy('created_at', 'desc')
-                    ->paginate(10);
+                    ->paginate(12);
         }
 
         // 登録フォーム用セレクトボックス用データ
