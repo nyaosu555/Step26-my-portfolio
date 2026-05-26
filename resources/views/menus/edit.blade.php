@@ -1,3 +1,6 @@
+<x-flash-message
+    :message="session('message')"
+    :type="session('type')" />
 <x-app-layout>
     {{-- 💡 新規登録画面の親ファイルと100%同じデザインのコンテナ（背景色、角丸、影、サイズ感） --}}
     <div class="relative z-10 w-[98%] md:w-[80%] mx-auto bg-[#fee5a5] rounded-[2em] shadow-2xl p-4 md:p-10 text-center">
