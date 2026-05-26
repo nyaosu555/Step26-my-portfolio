@@ -1,3 +1,5 @@
+import axios from "axios";
+
 // 💡 グローバル変数の宣言（要素の取得は関数内で行うため、ここでは値だけを管理）
 let lastValidSrc = null;
 let fileName = '画像が選択されていません。';
@@ -216,4 +218,68 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 500);
         }, 7000);
     }
+
+    const menuNameInput = document.getElementById('menu_name');
+    const container = document.getElementById('similar-menus-container');
+    const listContainer = document.getElementById('similar-menus-list');
+
+    // 要素が存在しない画面でのエラーを防ぐ
+    if(!menuNameInput || !container || !listContainer) return;
+
+    let debounceTimeout;
+
+    // 入力欄に文字が打ち込まれる度に発火
+    menuNameInput.addEventListener('input', function() {
+        const keyword = this.value.trim();
+
+
+        // タイマーを毎回リセット
+        clearTimeout(debounceTimeout);
+
+        // キーワードがからならカードエリアを隠して終了
+        if(!keyword) {
+            container.classList.add('hidden');
+            listContainer.innerHTML = '';
+            return;
+        }
+
+        // 入力が終わって300ms後にAPIを実行（デバウンス処理）
+        debounceTimeout = setTimeout(() => {
+            axios.get('/api/menus/search-similar', {
+                params: { keyword: keyword }
+            })
+            .then(response => {
+                const menus = response.data;
+
+                // 似たメニューが1件もなければ非表示
+                if(menus.length === 0) {
+                    container.classList.add('hidden');
+                    listContainer.innerHTML = '';
+                    return;
+                }
+
+                // 既存のリストをクリアして再構築
+                listContainer.innerHTML = '';
+                container.classList.remove('hidden');
+
+                // 取得したメニューの数だけカード（HTML）を生成
+                menus.forEach(menu => {
+                    const card = document.createElement('div');
+                    card.className = 'flex items-center gap-2 p-2 bg-white rounded border border-gray-200 shadow-sm text-sm';
+
+                    // 画像があるかどうかの判定
+                    const imgSrc = menu.image_path ? `/storage/${menu.image_path}` : '/images/no_image.png';
+
+                    card.innerHTML = `
+                        <img src="${imgSrc}" class="w-10 h-10 object-cover rounded-md border border-gray-100 shrink-0" alt="">
+                        <span class="font-medium text-gray-700 break-all">${menu.name}</span>
+                    `;
+                    listContainer.appendChild(card);
+                });
+            })
+            .catch(error => {
+                console.error('類似メニューの取得に失敗しました。', error);
+            });
+        }, 300);
+    });
 });

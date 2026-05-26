@@ -4,10 +4,27 @@
     {{-- メニュー名 --}}
     <div class="flex flex-col items-start gap-2 mt-4">
         <label for="menu_name" class="text-[#DA5019] font-bold">メニュー名※</label>
-        <input type="text" name="menu_name" value="{{ old('menu_name') }}" class="w-full md:w-[70%] border border-[#DA5019] focus:outline-none focus:ring-2 focus:ring-[#D97706] focus:border-none rounded-md shadow-sm p-2">
+        <input id="menu_name" type="text" name="menu_name" value="{{ old('menu_name') }}" class="w-full md:w-[70%] border border-[#DA5019] focus:outline-none focus:ring-2 focus:ring-[#D97706] focus:border-none rounded-md shadow-sm p-2">
         @error('menu_name')
             <p class="text-red-500 text-sm">{{ $message }}</p>
         @enderror
+
+        <div id="similar-menus-container" class="w-full md:w-[70%] mt-2 hidden">
+            <p class="text-sm font-bold text-amber-600 mb-2 flex items-center gap-1">
+                <svg width="14" height="14" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <rect width="96" height="96" fill="url(#pattern0_1418_5)"/>
+                    <defs>
+                    <pattern id="pattern0_1418_5" patternContentUnits="objectBoundingBox" width="1" height="1">
+                    <use xlink:href="#image0_1418_5" transform="scale(0.0104167)"/>
+                    </pattern>
+                    <image id="image0_1418_5" width="96" height="96" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAACXBIWXMAAAsTAAALEwEAmpwYAAAEcElEQVR4nO2cy44bRRSGi2W4ixBNn2OTkcL4lMdAQIIHQPACXMMlXBY8BAh2IeRCuASeAfEACJJxHRsTGGUFQmKfcCfZsQABQyI1KnviZDHGsftyqqrPJ/3Lma7z/139t+V2G6MoiqIoiqIoiqIoiqIogTIiuJMJXnOE3zgLv3sx4deO4FXu4m7p9SVNn1qPOMKLbDHfSY7wAtvWw9LrTJJ+Bx9wFv6aZf40BAt/O5s9JL3epDjbbu9yFs/NM/9qCHjO/430upPBWTh0veZfsxMOSa87CYZrd93tLyuLBsAW/uEukvT6o4ctfLq4+dsi7EuvP2r6HXh8afO3NSB4THqOKDnbbu9ii+eLBsCEP/b3r9wkPU90MMHhwuZPPx/Am9LzRMVGr722XPHO2gWwNbRopeeKBrbwWWnmT3cBOum5osB1syfKNv+KfKlLzxd+8RJ+X1UAbOEnLeT/gQnfqs78aR8clp4z2OJl/+m1+gC0kHfCWTxVuflayDszsK2n6jL/qrInpecOgk8ehBurLd7ZhTzq7bnZNB1HeKR+86eXoiOmybj1VqeW4p0lgq0Ngq5pKq7G4p25CyywaSLOtp6WNv+K/E2AaVrxOsIfpI2/Zhf83KhCZovHljXLzP/fywZx1DSBosVrqgqAYMt1snWTOs7i6SKXCzOHYpcjGJiUcYQHil6vzRwK9wHhAZMiZRWvqTqAVAvZWTxe1ByuIYBJCHjcpIR/QKqsT7xm3rFKOEZyhcwWhqUYY2sKYKIzuTE3mNgZdPDZEk3J5x2vzGMx4TMmZjbt7luchV9iDcARXji1dsetJlaY4ESpZ6SteQdMHup628TIYC3rOYJ/4w8AL7Ft32eaXLwsGMA4BItfRlXIrgvPVWEECwXg5W8mTFOLlwMIYPwDwH37bjOhwwTvVGUCCwYwFsEJ08Ti5UAC8IU8oNZ+EyqO4PNKz0ArvANCLmS2cLDq4TmAACaC501oxcsEvzYlABdaITsL79Vz5mEwchbeNSEwXF+5p+ri5QAVTCHXUbwcrr4SLeQ+ZS8EYEIuKziYfPFywBq/PkeikNni+9LDcyDyNyG1mt/U4uVZARBe2ui07q/FfF86jmAkPTQ3tZC503pJclAzb32iOyF7sVLz/fejTPCbBoAzAsCLo9XV2ysLgAlPSg7IgQcwFuHJSszvd1fuDaF4TegBWLxceiH7cmHCLwIYLo8gAK/NUguZu/hyAEPlEQWQ+5uVZIqXIwygtEJ2hB9KD8MRBrAdwgeFzPcPJE0eTJIfhuPUZf/G3wIB4GYAQ+SRa3Mp8x3howEsPk9B/qXji5/9hB9LL5wTkSP8aIkA4DvphXMygm+X2QECr5DBVHV+4QD8A0gBLDxPRGeWCeCNABaepyBn4fWFAxj19mSO8A/pxXPk8h6e7u4Fswz+R2rSA3DkKvwlzfjRE8I/pQfhyOTffT0geMWUwXA9Wx3/0t3fmmoY+Ux5bya378e4B3tLMV9RFEVRFEVRFEVRFEUxqfAfeqN4q0FPKqgAAAAASUVORK5CYII="/>
+                    </defs>
+                </svg>
+                もしかして、すでに同じメニューが登録されていませんか？
+            </p>
+            <div id="similar-menus-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-amber-50/50 p-3 rounded-lg border border-amber-200">
+            </div>
+        </div>
     </div>
 
     {{-- ジャンル --}}
