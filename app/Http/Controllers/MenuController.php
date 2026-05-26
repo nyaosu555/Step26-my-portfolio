@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\Request;
 
 class MenuController extends Controller
 {
@@ -314,5 +315,32 @@ class MenuController extends Controller
                 'type'      => 'danger',
             ]);
         }
+    }
+
+    // 入力された文字から似たメニューを検索してJSONJSONで返す（API用）
+    public function searchSimilar(Request $request) {
+        // そもそもログインしていない場合は、安全のために空の配列を返す
+        if (!Auth::check()) {
+            return response()->json([]);
+        }
+        // フロント（axios）から送られてきた検索キーワード（keyword）を取得
+        $keyword = $request->input('keyword');
+
+        // キーワードが空の場合は、空の配列を返す
+        if(empty($keyword)) {
+            return response()->json([]);
+        }
+
+        // ログインユーザーに紐づくメニューの中から、キーワードに「部分一致」するものを検索
+        // SQLの LIKE 検索（%キーワード%）を使って、前後の表記ゆれをまとめて引っ掛ける
+        $similarMenus = Auth::user()->menus()
+            ->where('name', 'LIKE', '%'. $keyword . '%')
+            ->get(['id', 'name', 'image_path']);
+
+        Log::info('ヒットした件数: ' . $similarMenus->count());
+
+        // 検索結果をそのままJSON形式でフロントに返却
+        return response()->json($similarMenus);
+
     }
 }
