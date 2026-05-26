@@ -17,7 +17,7 @@
             @foreach ($types as $type)
                 <label for="type_{{ $type->id }}" class="inline-flex items-center cursor-pointer bg-orange-50/50 hover:bg-orange-50 px-3 py-1.5 rounded-lg border border-transparent transition select-none">
                     <input type="radio" name="type_id" value="{{ $type->id }}"
-                        {{ old('type_id') === $type->id ? 'checked' : '' }}
+                        {{ old('type_id') == $type->id ? 'checked' : '' }}
                         class="w-4 h-4 text-orange-600 border-gray-300 focus:ring-orange-500"
                         id="type_{{ $type->id }}"
                     >
@@ -36,10 +36,13 @@
         {{-- 本物のボタンは隠す --}}
         <input type="file" name="image_path" id="imageInput" onchange="previewImage(this)" class="hidden">
 
+        <input type="hidden" name="current_image_status" id="currentImageStatus" value="{{ old('current_image_status', 'no_change') }}">
+        <input type="hidden" name="buffered_image_data" id="bufferedImageData" value="{{ old('buffered_image_data') }}">
         {{-- ボタンとファイル名の並び：スマホでは縦並びにして溢れを防ぎ、sm以上で横並びに --}}
         <div class="flex flex-col sm:flex-row sm:items-center gap-3 w-full">
-            {{-- 自作のボタン：スマホでもタップしやすいサイズ --}}
-            <label for="imageInput" class="cursor-pointer bg-[#DA5019] text-sm md:text-base text-white px-5 py-2.5 rounded-lg font-bold hover:bg-[#b84315] transition text-center shadow-sm shrink-0">
+            {{-- 💡 label側のonclickは、JS側のキャンセル処理と干渉させないためにconsole.logのみにスッキリ修正 --}}
+            <label for="imageInput"
+                   class="cursor-pointer bg-[#DA5019] text-sm md:text-base text-white px-5 py-2.5 rounded-lg font-bold hover:bg-[#b84315] transition text-center shadow-sm shrink-0">
                 画像を選択
             </label>
             {{-- ファイル名を表示 --}}
@@ -47,7 +50,7 @@
         </div>
 
         {{-- バリデーションエラーを表示 --}}
-        <p id="jsImageError" class="text-red-500 text-sm mt-1"></p>
+        <p id="jsImageError" class="text-red-500 text-sm mt-1" style="white-space: pre-line; text-align: left;"></p>
         @error('image_path')
             <p class="text-red-500 text-sm mt-1 laravel-image-error" style="white-space: pre-line; text-align: left;">{{ $message }}</p>
         @enderror
@@ -55,7 +58,7 @@
 
     {{-- 画像のプレビュー表示エリア --}}
     <div class="w-full max-w-[400px] aspect-[16/10] relative border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 overflow-hidden">
-        {{-- 初期状態では、hiddenをつけて隠す --}}
+        {{-- 初期状態では隠す --}}
         <img src="" id="imagePreview" alt="メニュー画像プレビュー" class="w-full h-full object-contain hidden">
 
         {{-- 画像がない時に表示するエリア --}}
@@ -69,8 +72,7 @@
 
     {{-- 送信ボタン --}}
     <div class="flex justify-center">
-        {{-- スマホでは押しやすいように横幅いっぱい（w-full）、PC（md）ではコンテンツに合わせる --}}
-        <button type="submit" class="w-full text-sm md:text-base md:w-auto bg-[#DA5019] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#b84315] transition shadow-md cursor-pointer text-lg text-center" id="save-menu-btn">
+        <button type="submit" class="w-full text-sm md:text-base md:w-auto bg-[#DA5019] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#b84315] transition shadow-md cursor-pointer text-center" id="save-menu-btn">
             メニューを追加
         </button>
     </div>

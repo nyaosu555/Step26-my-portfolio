@@ -1,105 +1,177 @@
+// 💡 グローバル変数の宣言（要素の取得は関数内で行うため、ここでは値だけを管理）
 let lastValidSrc = null;
-const fileNameDisplay = document.getElementById('fileNameDisplay');
 let fileName = '画像が選択されていません。';
 
+// window.previewImage の中身を以下にアップデートしてください
+
 window.previewImage = function(input) {
-    const file = input.files[0];
+    console.log('画像選択（changeイベント）が発火しました');
+
     const preview = document.getElementById('imagePreview');
     const placeHolder = document.getElementById('placeholder');
     const deleteBtn = document.getElementById('deleteImageBtn');
     const laravelErrorMsg = document.querySelector('.laravel-image-error');
     const errorMsg = document.getElementById('jsImageError');
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
 
-    // バリデーションルール
-    const maxSize = 2 * 1024 * 1024;    //2M
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
+    const statusInput = document.getElementById('currentImageStatus');
+    const bufferedDataInput = document.getElementById('bufferedImageData');
 
-    if (errorMsg) {
-        errorMsg.textContent = '';
-    }
-    // PHP（Laravel）側のエラー表示も画面に残っているなら一緒に消す
-    if (laravelErrorMsg) {
-        laravelErrorMsg.style.display = 'none';
-    }
+    const file = input.files[0];
 
-    if(file) {
-        // バリデーションチェックの開始
-        let errorMessage = '';
-        if(!allowedTypes.includes(file.type)) {
-            errorMessage = '画像ファイルは（jpg, jpeg, png, gif）の中から選択してください。\n別の画像を選ぶか、画像なしで登録する場合は、画像を削除して「登録」を押してください。';
-        } else if(file.size > maxSize) {
-            errorMessage = '画像サイズは2MB以下にしてください。\n別の画像を選ぶか、画像なしで登録する場合は、画像を削除して「登録」を押してください。';
-        }
+    if (errorMsg) errorMsg.textContent = '';
+    if (laravelErrorMsg) laravelErrorMsg.style.display = 'none';
 
-        if(errorMessage) {
-            // エラーがある場合：ボタン無効化, プレビューは更新しない
-            if(errorMsg) errorMsg.textContent = errorMessage;
-            return;
-        }
+    // =========================
+    // チェック①：ファイルが存在しない（キャンセル時）
+    // =========================
+    if (!file) {
+        console.log('画像選択キャンセル判定を通過');
 
-        // エラーがない場合：ボタンを有効化、メッセージを消す
-        if(errorMsg) errorMsg.textContent = '';
-
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            lastValidSrc = e.target.result; //成功した画像を保存
-            fileName = file.name;
+        if (lastValidSrc) {
+            if (preview) {
                 preview.src = lastValidSrc;
                 preview.classList.remove('hidden');
-                deleteBtn.classList.remove('hidden');
-                placeHolder.classList.add('hidden');
-                fileNameDisplay.textContent = fileName;
-        }
+            }
+            if (deleteBtn) deleteBtn.classList.remove('hidden');
+            if (placeHolder) placeHolder.classList.add('hidden');
+            if (fileNameDisplay) fileNameDisplay.textContent = fileName;
 
-        reader.readAsDataURL(file);
+            // 💡 キャンセルされても、裏に保存した画像データを維持する
+            if (statusInput) statusInput.value = 'fallback';
+        } else {
+            if (preview) {
+                preview.src = '';
+                preview.classList.add('hidden');
+            }
+            if (deleteBtn) deleteBtn.classList.add('hidden');
+            if (placeHolder) placeHolder.classList.remove('hidden');
+            if (fileNameDisplay) fileNameDisplay.textContent = '画像が選択されていません。';
 
-    } else {
-        // キャンセルされた場合：もし過去に成功した画像があればそれを表示
-        if(lastValidSrc && fileName) {
-            preview.src = lastValidSrc;
-            placeHolder.classList.add('hidden');
-            fileNameDisplay.textContent = fileName;
+            if (statusInput) statusInput.value = 'no_change';
+            if (bufferedDataInput) bufferedDataInput.value = '';
         }
+        return;
     }
-}
 
+    // =========================
+    // チェック②：ファイルが存在する場合のバリデーション（★ここへ移動！）
+    // =========================
+    const maxSize = 2 * 1024 * 1024;
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
+    let errorMessage = '';
+
+    if (!allowedTypes.includes(file.type)) {
+        errorMessage = '画像ファイルは（jpg, jpeg, png, gif）の中から選択してください。';
+    } else if (file.size > maxSize) {
+        errorMessage = '画像サイズは2MB以下にしてください。';
+    }
+
+    if (errorMessage) {
+        if (errorMsg) errorMsg.textContent = errorMessage;
+        if (lastValidSrc) {
+            if (preview) {
+                preview.src = lastValidSrc;
+                preview.classList.remove('hidden');
+            }
+            if (deleteBtn) deleteBtn.classList.remove('hidden');
+            if (placeHolder) placeHolder.classList.add('hidden');
+            if (fileNameDisplay) fileNameDisplay.textContent = fileName;
+        }
+        return;
+    }
+
+    // =========================
+    // 正常系：すべてのチェックを通過した安全なデータのみスキャン
+    // =========================
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        console.log('画像読み込み成功');
+
+        lastValidSrc = e.target.result;
+        fileName = file.name;
+
+        if (preview) {
+            preview.src = lastValidSrc;
+            preview.classList.remove('hidden');
+        }
+        if (deleteBtn) deleteBtn.classList.remove('hidden');
+        if (placeHolder) placeHolder.classList.add('hidden');
+        if (fileNameDisplay) fileNameDisplay.textContent = fileName;
+
+        if (statusInput) statusInput.value = 'new_image';
+        // 【超重要】隠しタグに画像のテキストデータを退避！
+        if (bufferedDataInput) bufferedDataInput.value = e.target.result;
+    };
+
+    reader.readAsDataURL(file);
+};
+
+// ✕ボタンが押されたとき（画像をクリア）
 window.clearImage = function() {
+
+    // 省略せずにすべての要素を確実に取得します
     const input = document.getElementById('imageInput');
     const preview = document.getElementById('imagePreview');
     const placeHolder = document.getElementById('placeholder');
     const deleteBtn = document.getElementById('deleteImageBtn');
-    const errorMsg = document.getElementById('js-ImageError');
+    const errorMsg = document.getElementById('jsImageError');
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+    const statusInput = document.getElementById('currentImageStatus');
+    const bufferedDataInput = document.getElementById('bufferedImageData');
 
-    input.value = '';  //選択されているファイルをリセット
-    lastValidSrc = null;  //保持していた画像も消す
-    fileNameDisplay.textContent = '画像が選択されていません。';
-    if(errorMsg) errorMsg.textContent = '';     //エラーを消す
+    // 選択されているファイルをリセット
+    if (input) {
+        input.value = '';
+    }
 
-    preview.src = '';
-    preview.classList.add('hidden');
-    deleteBtn.classList.add('hidden');
-    placeHolder.classList.remove('hidden');
-}
+    lastValidSrc = null;          // 保持していた画像データも消す
+    fileName = '画像が選択されていません。';
 
+    if (fileNameDisplay) fileNameDisplay.textContent = fileName;
+    if (errorMsg) errorMsg.textContent = '';
+
+    if (preview) {
+        preview.src = '';
+        preview.classList.add('hidden');
+    }
+    if (deleteBtn) deleteBtn.classList.add('hidden');
+    if (placeHolder) placeHolder.classList.remove('hidden');
+
+    // 明示的に「削除された」状態をセット
+    if (statusInput) statusInput.value = 'deleted';
+    if (bufferedDataInput) bufferedDataInput.value = ''; // テキストデータもクリア
+};
+
+// DOM構築後のイベントリスナー設定
 document.addEventListener('DOMContentLoaded', () => {
     const menuForm = document.getElementById('menu-form');
     const saveMenuBtn = document.getElementById('save-menu-btn');
     const deleteBtns = document.querySelectorAll('.delete-individual-btn');
 
     // メニュー登録処理
-    if (saveMenuBtn && menuForm) {
+    if(saveMenuBtn && menuForm) {
         saveMenuBtn.addEventListener('click', (e) => {
-            // 通常のフォーム送信を止める
             e.preventDefault();
 
-            // 自作モーダルを呼び出す
-            window.dispatchEvent(new CustomEvent('confirm-delete', {
+            // ボタンの文字「追加」「更新」かを読み取る
+            const btnText = saveMenuBtn.textContent.trim();
+
+            // 文字に「更新」が含まれているかどうかで、メッセージを切り替える
+            let confirmMessage = 'この内容でメニューを登録しますか？';
+            let confirmBtnText = '登録する';
+
+            if(btnText.includes('更新')) {
+                confirmMessage = 'この内容でメニューを更新しますか？';
+                confirmBtnText = '更新する';
+            }
+
+            // カスタムイベントを発火
+             window.dispatchEvent(new CustomEvent('confirm-delete', {
                 detail: {
-                    message: 'この内容でメニューを登録しますか？',
-                    btnText: '登録する', // ボタンの文字を「登録する」に変更
+                    message: confirmMessage,
+                    btnText: confirmBtnText,
                     action: () => {
-                        // モーダルで「登録する」が押されたらフォームを送信
                         menuForm.submit();
                     }
                 }
@@ -108,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // メニュー削除処理
-    if(deleteBtns.length > 0) {
+    if (deleteBtns.length > 0) {
         deleteBtns.forEach((btn) => {
             btn.addEventListener('click', () => {
                 const menuName = btn.dataset.name;
@@ -127,14 +199,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // フラッシュメッセージ制御
     const messageBox = document.getElementById('flash-message');
-
-    if(messageBox && messageBox.textContent.trim() !== '') {
+    if (messageBox && messageBox.textContent.trim() !== '') {
         requestAnimationFrame(() => {
             messageBox.classList.remove('-translate-y-full');
             messageBox.classList.add('translate-y-0');
             messageBox.classList.add('opacity-100');
-
         });
 
         setTimeout(() => {
@@ -146,5 +217,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 7000);
     }
 });
-
-

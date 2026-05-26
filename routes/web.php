@@ -28,6 +28,12 @@ Route::middleware('auth')->group(function () {
     // メニューデータ登録
     Route::post('/menus', [MenuController::class, 'store'])->middleware('auth')->name('menus.store');
 
+    // メニューの編集画面を表示
+    Route::get('menus/{menu}/edit', [MenuController::class, 'edit'])->middleware('auth')->name('menus.edit');
+
+    // メニューの更新
+    Route::patch('menus/{menu}', [MenuController::class, 'update'])->middleware('auth')->name('menus.update');
+
     // メニューの削除
     Route::delete('/menus/{menu}', [MenuController::class, 'destroy'])->middleware('auth')->name('menus.destroy');
 
@@ -44,3 +50,4 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
