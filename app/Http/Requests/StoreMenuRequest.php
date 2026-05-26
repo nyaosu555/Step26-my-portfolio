@@ -57,12 +57,27 @@ class StoreMenuRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-        // 成功時と同じ形式で「失敗メッセージ」をセッションに仕込む
-        session()->flash('message', 'メニューの登録に失敗しました。各項目のエラーを解消してください。');
+        // // 成功時と同じ形式で「失敗メッセージ」をセッションに仕込む
+        // session()->flash('message', 'メニューの登録に失敗しました。各項目のエラーを解消してください。');
+        // session()->flash('type', 'danger');
+
+        // // 本来のバリデーション失敗時の動き（エラーを持って前の画面に戻る）を実行
+        // parent::failedValidation($validator);
+
+        // リクエストが PATCH または PUT（＝更新処理）の場合
+        if ($this->isMethod('PATCH') || $this->isMethod('PUT')) {
+            session()->flash('message', 'メニューの更新に失敗しました。各項目のエラーを解消してください。');
+        } else {
+            // 💡 それ以外（＝POST、新規登録処理）の場合
+            session()->flash('message', 'メニューの登録に失敗しました。各項目のエラーを解消してください。');
+        }
+
+        // 共通のタイプ（赤色）をセット
         session()->flash('type', 'danger');
 
-        // 本来のバリデーション失敗時の動き（エラーを持って前の画面に戻る）を実行
+        // 本来のバリデーション失敗時の動きを実行
         parent::failedValidation($validator);
+
     }
 
 }

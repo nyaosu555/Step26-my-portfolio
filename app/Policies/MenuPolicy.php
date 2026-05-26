@@ -17,11 +17,11 @@ class MenuPolicy
     }
 
     /**
-     * Determine whether the user can view the model.
+     * 編集画面を開けるかどうかのチェック
      */
     public function view(User $user, Menu $menu): bool
     {
-        return false;
+        return $user->id === $menu->user_id || $user->role === 'admin';
     }
 
     /**
@@ -33,11 +33,11 @@ class MenuPolicy
     }
 
     /**
-     * Determine whether the user can update the model.
+     * 更新できるかどうかのチェック
      */
     public function update(User $user, Menu $menu): bool
     {
-        return false;
+        return $user->id === $menu->user_id || $user->role === 'admin';
     }
 
     /**
