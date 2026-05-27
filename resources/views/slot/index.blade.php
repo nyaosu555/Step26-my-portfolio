@@ -49,12 +49,12 @@
         </div>
         <div id="slot-result-display"
             class="hidden mt-3 md:mt-6 p-4 bg-white/50 backdrop-blur-sm rounded-2xl border-2 border-dashed border-orange-300 flex items-center justify-center">
-            <div class="text-orange-900 font-bold text-lg md:text-xl flex items-center gap-3">
+            <div class="text-orange-900 font-bold text-lg md:text-xl flex flex-col md:flex-row items-center gap-3">
                 <span class="md:text-sm text-xs text-orange-600 font-normal">本日の献立：</span>
                 <span id="display-main" class="text-sm md:text-base"></span>
-                <span class="text-orange-300">/</span>
+                <span class="text-orange-300 hidden md:inline-block">/</span>
                 <span id="display-sub-a" class="text-sm md:text-base"></span>
-                <span class="text-orange-300">/</span>
+                <span class="text-orange-300 hidden md:inline-block">/</span>
                 <span id="display-sub-b" class="text-sm md:text-base"></span>
             </div>
         </div>
