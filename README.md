@@ -57,8 +57,8 @@
 
 ### 🛠️ 管理機能
 - **メニュー管理機能（CRUD）**
-  - 自分食べたいメニューを登録・編集・削除できます。
-  - **ソフトデリート（論理削除）対応:** 誤ってメニューを削除しても、過去の「献立履歴（ meal_records ）」が壊れないように、データを完全に消さず安全に保持する設計にしています。
+  - 自分が食べたいメニューを登録・編集・削除できます。
+  - **ソフトデリート（論理削除）対応:** 誤ってメニューを削除しても、過去の「献立履歴（meal_records）」が壊れないように、データを完全に消さず安全に保持する設計にしています。
 - **リアルタイム類似メニュー検索機能（重複登録防止）✨**
   - メニュー登録時、入力した文字に合わせて「すでに同じメニューが登録されていないか」をJavaScriptで裏から自動検索（API連携）して通知します。
   - **デバウンス（300ms）の実装:** 1文字入力するごとにサーバーへ無駄な通信がいかないよう、入力が少し止まったタイミングで賢く通信を走らせる、実務レベルの負荷対策・UI/UXを施しています。
@@ -110,11 +110,11 @@
 
 - **MenuControllerTest / MenuUploadTest**
   - メニューの登録・編集・削除（CRUD機能）が、認証されたユーザーごとに正しく制限されて動作するかを検証。
-  - 画像アップロード時のバリデーションや、ストレージへの保存処理が正常が行われるかを厳密にテスト。
+  - 画像アップロード時のバリデーションや、ストレージへの保存処理が正常に行われるかを厳密にテスト。
 - **MenuSearchTest（リアルタイム類似検索テスト）**
   - サジェストAPIの挙動を検証。他人のメニューが混ざらないことや、**ソフトデリート（論理削除）されたメニューが確実に検索結果から除外されること**を担保。
 - **SlotControllerTest**
-  - アプリのメイン機能である「スロットによるおかず決定ロジック」の検証。主菜・副菜・汁物が仕様通り正しくランダムに選出・返却されるかをテスト。
+  - アプリのメイン機能である「スロットによるおかず決定ロジック」の検証。主菜・副菜・副菜が仕様通り正しくランダムに選出・返却されるかをテスト。
 - **MealRecordControllerTest**
   - スロットで決定したメニューが、ユーザーの「献立履歴」としてデータベースへ正確に保存・管理できるかをテスト。
 
@@ -124,26 +124,75 @@
 
 ---
 
-## 💻 動作確認・ローカルセットアップ方法
+## 🚀 ローカル環境セットアップ手順 (Docker / Laravel Sail)
 
-Docker環境（Laravel Sail）を使用して簡単にローカル環境を構築できます。
+Docker環境（Laravel Sail）を使用して簡単にローカル環境を構築できます。他人がリポジトリをクローンした後、アプリを完全に動作させるための全手順です。
+
+### 1. リポジトリのクローンとディレクトリへの移動
+ターミナルで以下のコマンドを実行し、リポジトリをローカルにクローンしてそのディレクトリに移動します。
 
 ```bash
-# 1. リポジトリのクローン
-git clone 【あなたのGitHubリポジトリのURL】
+# GitHubからプロジェクトをダウンロード
+git clone 【あなたのGitHubリポジトリのURL】 フォルダ名
+
+# クローンしたプロジェクトのフォルダに移動
 cd 【リポジトリのフォルダ名】
 
-# 2. パッケージのインストール
-composer install
-npm install
-
-# 3. .envファイルの準備と設定変更
+# 設定ファイルの作成（.env.example をベースに作成）
 cp .env.example .env
-php artisan key:generate
 
-# 4. Dockerコンテナの起動（Laravel Sail）
+# データベース設定
+DB_CONNECTION=pgsql
+DB_HOST=pgsql
+DB_PORT=5432
+DB_DATABASE=laravel
+DB_USERNAME=sail
+DB_PASSWORD=password
+
+# pgAdminログイン設定
+PGADMIN_EMAIL=test@example.com
+PGADMIN_PASSWORD=password
+
+# 4. Docker経由でLaravelに必要な外部ライブラリをダウンロード・インストール
+docker run --rm \
+    -usr/local/bin/devuser:root \
+    -v "$(pwd)":/var/www/html \
+    -w /var/www/html \
+    laravelsail/php85-composer:latest \
+    composer install
+
+#PCローカルにPHPやComposerがインストールされていない場合でも、以下のDockerコマンドを使用して必要なパッケージを安全にインストールできます。
+
+#※ 他のプロジェクトやPC本体の設定には一切影響を与えない安全な使い捨てコンテナを使用します。
+
+# 【トラブル予防】もし過去の古いファイル（vendor）が残っている場合は一度削除します
+# （権限エラーで消せない場合は、先頭に sudo をつけて sudo rm -rf vendor を実行してください）
+rm -rf vendor
+
+# Docker経由でLaravelに必要な外部ライブラリをダウンロード・インストール（100%確実に動くプレーン版）
+docker run --rm \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    php:8.2-cli \
+    bash -c "apt-get update && apt-get install -y unzip && curl -sS [https://getcomposer.org/installer](https://getcomposer.org/installer) | php && ./composer.phar install --ignore-platform-reqs"
+
+# 過去のコンテナ残骸や古いデータベースの記憶（ボリューム）を完全に消去
+./vendor/bin/sail down -v
+
+# 仮想サーバー（コンテナ）をバックグラウンドで新しく起動
 ./vendor/bin/sail up -d
 
-# 5. マイグレーションと初期データ（シーダー）の投入
+# 起動したコンテナ内でアプリケーションキーを生成
+./vendor/bin/sail artisan key:generate
+
+# フロントエンド用のパッケージ（Node.jsモジュール）をインストール
+./vendor/bin/sail npm install
+
+# 画面表示に必要なアセット（CSS/JS）をコンパイル・ビルド
+./vendor/bin/sail npm run build
+
+# データベース内にテーブルを作成し、テスト用のおかずデータを一括投入
 ./vendor/bin/sail artisan migrate --seed
 
+# メニュー登録機能などでアップロードした画像をブラウザに正しく表示させるため、シンボリックリンクを作成します。
+./vendor/bin/sail artisan storage:link
