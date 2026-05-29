@@ -1,59 +1,61 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📱 今日のおかずなんにしよ
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+毎日の献立選びに迷う時間をゼロにする、スロット型の献立決定サポートアプリです。
 
-## About Laravel
+## 🗒️ サービス概要
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 開発背景とペルソナ（対象ユーザー）
+仕事や家事で日々忙しい「20代〜40代の主婦・共働き世帯」の方々をターゲットにしています。
+毎日仕事終わりに「今日のご飯、何にしよう…」と頭を悩ませる時間は、小さなストレスになりがちです。そんな夕食の献立を**「短時間で」「手軽に」**決めたいというニーズを解決するために開発しました。
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### アプリが提供する価値
+- **スロット形式でパパッと自動決定**
+  主菜・副菜など「3品のおかず」をスロット形式で一瞬で提案。悩む時間をゼロにします。
+- **献立決めを「楽しい体験」に**
+  ただ機械的に決めるだけでなく、ゲーム感覚の演出（スロットアニメーションなど）を取り入れることで、面倒な献立決めをワクワクする楽しい時間へと変える体験を提供します。
+- **いつでも、どこからでも**
+  スマートフォン・PCのどちらからでも、手軽にストレスなく利用できるレスポンシブな操作性を実現しています。
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🚀 主な機能
 
-## Learning Laravel
+### 🎯 献立決定（メイン機能）
+- **スロット式・3品おかず決定機能**
+  - 主菜・副菜・汁物をスロットアニメーションの演出とともに自動で決定します。
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 📅 履歴・管理機能
+- **メニュー管理機能（CRUD）**
+  - 自分のお気に入りのメニューを登録・編集・削除できます。
+  - **ソフトデリート（論理削除）対応:** 誤ってメニューを削除しても、過去の「食べたよ履歴（ meal_records ）」の統計や歴史が壊れないように、データを完全に消さず安全に保持する設計にしています。
+- **リアルタイム類似メニュー検索機能（重複登録防止）✨**
+  - メニュー登録時、入力した文字に合わせて「すでに同じメニューが登録されていないか」をJavaScriptで裏から自動検索（API連携）して通知します。
+  - **デバウンス（300ms）の実装:** 1文字入力するごとにサーバーへ無駄な通信がいかないよう、入力が少し止まったタイミングで賢く通信を走らせる、実務レベルの負荷対策・UI/UXを施しています。
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ 使用技術
 
-## Laravel Sponsors
+### 💻 フロントエンド
+- JavaScript（ES6+ / 非同期通信・DOM操作）
+- Alpine.js（軽量フロントエンドフレームワーク / 状態管理・UIインタラクション）
+- Tailwind CSS（レスポンシブ対応・UIデザイン）
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### ⚙️ バックエンド / インフラ
+- PHP 8.5.3
+- Laravel 12.53.0
+- PostgreSQL
+- Docker / Laravel Sail（コンテナ開発環境）
 
-### Premium Partners
+### 🧪 テスト・品質保証
+品質担保およびバグの早期発見のため、PHPUnitを用いたFeatureテスト（機能テスト）を網羅的に実装しています。
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- **MenuControllerTest / MenuUploadTest**
+  - メニューの登録・編集・削除（CRUD機能）が、認証されたユーザーごとに正しく制限されて動作するかを検証。
+  - 画像アップロード時のバリデーションや、ストレージへの保存処理が正常に行われるかを厳密にテスト。
+- **MenuSearchTest（リアルタイム類似検索テスト）**
+  - サジェストAPIの挙動を検証。他人のメニューが混ざらないことや、**ソフトデリート（論理削除）されたメニューが確実に検索結果から除外されること**を担保。
+- **SlotControllerTest**
+  - アプリのメイン機能である「スロットによるおかず決定ロジック」の検証。主菜・副菜・汁物が仕様通り正しくランダムに選出・返却されるかをテスト。
+- **MealRecordControllerTest**
+  - スロットで決定したメニューが、ユーザーの「献立履歴」としてデータベースへ正確に保存・管理できるかをテスト。
 
-## Contributing
+## 📊 データベース設計（ER図）
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<img width="860" height="692" alt="Image" src="https://github.com/user-attachments/assets/7a53122d-375f-47f1-a2d1-573bc4fca093" />
