@@ -92,9 +92,12 @@ class MenuController extends Controller
     }
 
     // 登録メニュー一覧の表示
-    public function index() {
+    public function index(Request $request) {
         // 現在ログインしているユーザー情報を取得
         $user = Auth::user();
+
+        // 何ページ目かのセッションを残しておく（更新キャンセル用）
+        session(['menus_current_page' => $request->query('page', 1)]);
 
         // 権限に応じて取得するメニューを分岐
         if($user->role === 'admin') {
@@ -126,11 +129,17 @@ class MenuController extends Controller
                     ? asset('storage/' . $menu->image_path)
                     : asset('images/no_image.png');
 
-                // 登録フォームと同様に、セレクトボックスのデータを取得
-                $types = Type::all();
+            // 登録フォームと同様に、セレクトボックスのデータを取得
+            $types = Type::all();
+
+            // セッションからページ数を取得（なければ 1）
+            $page = session('menus_current_page', 1);
+
+            // 「キャンセル」で使ったら、もう不要なのでセッションから削除する
+            session()->forget('menus_current_page');
 
 
-                return view('menus.edit', compact('menu', 'types', 'imagePath'));
+            return view('menus.edit', compact('menu', 'types', 'imagePath', 'page'));
 
         } catch (AuthorizationException $e) {
                 // 権限エラー（403）が発生した場合はここへジャンプします！

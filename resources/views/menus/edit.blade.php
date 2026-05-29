@@ -2,17 +2,17 @@
     :message="session('message')"
     :type="session('type')" />
 <x-app-layout>
-    {{-- 💡 新規登録画面の親ファイルと100%同じデザインのコンテナ（背景色、角丸、影、サイズ感） --}}
+    {{-- 新規登録画面の親ファイルと100%同じデザインのコンテナ（背景色、角丸、影、サイズ感） --}}
     <div class="relative z-10 w-[98%] md:w-[80%] mx-auto bg-[#fee5a5] rounded-[2em] shadow-2xl p-4 md:p-10 text-center">
 
         <div class="mx-auto py-6 sm:py-12 flex flex-col gap-6 sm:gap-10">
 
-            {{-- 💡 タイトルを「メニュー編集」に変更 --}}
+            {{-- タイトルを「メニュー編集」に変更 --}}
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 メニュー編集
             </h2>
 
-            {{-- 💡 編集専用のフォームコンテナ（白背景の丸角カード） --}}
+            {{-- 編集専用のフォームコンテナ（白背景の丸角カード） --}}
             <div class="bg-white p-4 md:p-8 rounded-2xl shadow-sm">
 
                 <form action="{{ route('menus.update', $menu) }}" method="POST" enctype="multipart/form-data" id="menu-form" class="space-y-6 text-left">
@@ -98,6 +98,9 @@
                         </button>
                     </div>
                 </form>
+                <div class="flex justify-center">
+                    <a href="{{ route('menus.index') }}?page={{ $page }}" class="hover:text-gray-400">キャンセルして一覧に戻る</a>
+                </div>
 
             </div>
 
