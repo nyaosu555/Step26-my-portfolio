@@ -26,5 +26,10 @@ class AppServiceProvider extends ServiceProvider
             // ログイン中のユーザーのroleが「admin」なら通す
             return $user->role === 'admin';
         });
+
+        // 本番環境（Fly.io）の場合だけ、強制的にHTTPSにする設定
+        if (config('app.env') === 'production') {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
     }
 }
