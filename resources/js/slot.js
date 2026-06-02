@@ -142,7 +142,7 @@ function setupSlot(elementId, category) {
         const li = document.createElement('li');
         li.dataset.typeId = item.type_id; // data-type-id になる
         li.dataset.name = item.name;      // data-name になる
-        li.textContent = `${item.name} (ID:${item.type_id})`; // 画面上にも出す
+        // li.textContent = `${item.name} (ID:${item.type_id})`; // 画面上にも出す
         // 画像パスの組み立て
         const rawPath = item.image_path;
         let imgPath = 'images/no_image.png';
